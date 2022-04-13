@@ -1,3 +1,9 @@
 .btn-indigo {
-    @apply bg-indigo-700 text-white font-bold py-2 px-4 rounded;
-  }
+  @apply bg-indigo-700 text-white font-bold py-2 px-4 rounded;
+}
+.btn-opal {
+  @apply bg-opal text-white font-bold py-2 px-4 rounded;
+}
+.btn-coral {
+  @apply bg-coral text-white font-bold py-2 px-4 rounded;
+}
