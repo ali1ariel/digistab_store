@@ -46,6 +46,12 @@
             <%= error_tag f, :quantity %>
           </div>
         </div>
+        <div>
+          <%= label f, :status_select %>
+          <%= select f, :status_select, Enum.map(@status, &{&1.name, &1.id}) |> Enum.sort_by(fn {name, id} -> (id != @actual_status.id) end), class: "form-text-input" %>
+          <%= error_tag f, :status_select %>
+          <%= @actual_status.description %>
+        </div>
       </div>
       <div class="md:grid md:col-start-3 md:col-end-4">
 

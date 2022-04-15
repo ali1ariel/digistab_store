@@ -21,4 +21,20 @@ defmodule DigistabStore.StoreFixtures do
 
     product
   end
+
+  @doc """
+  Generate a status.
+  """
+  def status_fixture(attrs \\ %{}) do
+    {:ok, status} =
+      attrs
+      |> Enum.into(%{
+        description: "some description",
+        id: "7488a646-e31f-11e4-aace-600308960662",
+        name: "some name"
+      })
+      |> DigistabStore.Store.create_status()
+
+    status
+  end
 end

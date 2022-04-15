@@ -3,6 +3,7 @@ defmodule DigistabStoreWeb.ProductLive.Index do
 
   alias DigistabStore.Store
   alias DigistabStore.Store.Product
+  alias DigistabStore.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -17,7 +18,7 @@ defmodule DigistabStoreWeb.ProductLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Product")
-    |> assign(:product, Store.get_product!(id))
+    |> assign(:product, Store.get_product!(id) |> Repo.preload(:status))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -34,7 +35,7 @@ defmodule DigistabStoreWeb.ProductLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    product = Store.get_product!(id)
+    product = Store.get_product!(id) |> Repo.preload(:status)
     {:ok, _} = Store.delete_product(product)
 
     {:noreply, assign(socket, :products, list_products())}

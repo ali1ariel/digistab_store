@@ -4,8 +4,20 @@ defmodule DigistabStoreWeb.ProductLiveTest do
   import Phoenix.LiveViewTest
   import DigistabStore.StoreFixtures
 
-  @create_attrs %{description: "some description", media: "some media", name: "some name", price: 42, quantity: 42}
-  @update_attrs %{description: "some updated description", media: "some updated media", name: "some updated name", price: 43, quantity: 43}
+  @create_attrs %{
+    description: "some description",
+    media: "some media",
+    name: "some name",
+    price: 42,
+    quantity: 42
+  }
+  @update_attrs %{
+    description: "some updated description",
+    media: "some updated media",
+    name: "some updated name",
+    price: 43,
+    quantity: 43
+  }
   @invalid_attrs %{description: nil, media: nil, name: nil, price: nil, quantity: nil}
 
   defp create_product(_) do

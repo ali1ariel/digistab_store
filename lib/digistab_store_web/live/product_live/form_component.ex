@@ -2,25 +2,47 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   use DigistabStoreWeb, :live_component
 
   alias DigistabStore.Store
+  alias DigistabStore.Repo
 
   @impl true
   def update(%{product: product} = assigns, socket) do
-    changeset = Store.change_product(product)
+    product = product |> Repo.preload(:status)
+
+    status = DigistabStore.Store.list_status()
+
+    new_assigns = [
+      changeset: Store.change_product(product),
+      status: status,
+      actual_status: if(is_nil(product.status), do: List.first(status), else: product.status)
+    ]
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(new_assigns)}
   end
 
   @impl true
   def handle_event("validate", %{"product" => product_params}, socket) do
+    status =
+      if product_params["status_select"] == "" do
+        socket.assigns.actual_status
+      else
+        DigistabStore.Store.get_status!(product_params["status_select"])
+      end
+
     changeset =
       socket.assigns.product
-      |> Store.change_product(product_params)
+      |> Repo.preload(:status)
+      |> Store.change_product(product_params |> Map.put("status", status))
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    assigns = [
+      changeset: changeset,
+      actual_status: status
+    ]
+
+    {:noreply, assign(socket, assigns)}
   end
 
   def handle_event("save", %{"product" => product_params}, socket) do
@@ -28,7 +50,10 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   end
 
   defp save_product(socket, :edit, product_params) do
-    case Store.update_product(socket.assigns.product, product_params) do
+    status = DigistabStore.Store.get_status!(product_params["status_select"])
+    params = product_params |> Map.put("status", status)
+
+    case Store.update_product(socket.assigns.product |> Repo.preload(:status), params) do
       {:ok, _product} ->
         {:noreply,
          socket
@@ -41,7 +66,10 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   end
 
   defp save_product(socket, :new, product_params) do
-    case Store.create_product(product_params) do
+    status = DigistabStore.Store.get_status!(product_params["status_select"])
+    params = product_params |> Map.put("status", status)
+
+    case Store.create_product(params) do
       {:ok, _product} ->
         {:noreply,
          socket
