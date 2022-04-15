@@ -8,6 +8,10 @@
 
 @import "./components/buttons.css";
 
+@import "./components/frames.css";
+
+@import "./components/forms.css";
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;

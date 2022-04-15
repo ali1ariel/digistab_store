@@ -7,27 +7,51 @@
     id="product-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
+    phx-submit="save"
+    class="flex flex-col ">
+    <div class="md:grid md:grid-cols-3">
+      <div class="md:col-start-1 md:col-end-3 flex flex-col space-y-4">
+        <div class="form-field-text">
+          <%= label f, :name %>
+          <%= text_input f, :name, class: "form-text-input"%>
+          <%= error_tag f, :name %>
+        </div>
+    
+        <div class="form-field-text">
+          <%= label f, :description %>
+          <div id="product-description-div" class="mb-8" phx-update="ignore">
+            <div id="editor" phx-hook="TextEditor" class="mb-4" phx-target={@myself} >
+            </div>
+          </div>
+          <%= hidden_input f, :description, rows: 10, class: "form-text-input" %>
+          <%= error_tag f, :description %>
+        </div>
+    
+        <div class="form-field-text">
+          <%= label f, :media %>
+          <%= text_input f, :media, class: "form-text-input", placeholder: "https://www.example.com/photo.jpg" %>
+          <%= error_tag f, :media %>
+        </div>
+    
+        <div class="form-row">
+          <div class="form-field-text">
+            <%= label f, :price %>
+            <%= number_input f, :price, class: "form-text-input" %>
+            <%= error_tag f, :price %>
+          </div>
+        
+          <div class="form-field-text">
+            <%= label f, :quantity %>
+            <%= number_input f, :quantity, class: "form-text-input" %>
+            <%= error_tag f, :quantity %>
+          </div>
+        </div>
+      </div>
+      <div class="md:grid md:col-start-3 md:col-end-4">
+
+      </div>
+    </div>
   
-    <%= label f, :name %>
-    <%= text_input f, :name %>
-    <%= error_tag f, :name %>
-  
-    <%= label f, :description %>
-    <%= textarea f, :description %>
-    <%= error_tag f, :description %>
-  
-    <%= label f, :price %>
-    <%= number_input f, :price %>
-    <%= error_tag f, :price %>
-  
-    <%= label f, :quantity %>
-    <%= number_input f, :quantity %>
-    <%= error_tag f, :quantity %>
-  
-    <%= label f, :media %>
-    <%= text_input f, :media %>
-    <%= error_tag f, :media %>
   
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>

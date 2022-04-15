@@ -1,5 +1,5 @@
 defmodule DigistabStore.Store.Product do
-  use Ecto.Schema
+  use DigistabStore.Schema
   import Ecto.Changeset
 
   schema "products" do
