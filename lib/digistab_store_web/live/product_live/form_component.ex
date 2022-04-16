@@ -6,14 +6,17 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
   @impl true
   def update(%{product: product} = assigns, socket) do
-    product = product |> Repo.preload(:status)
+    product = product |> Repo.preload([:status, :category])
 
     status = DigistabStore.Store.list_status()
+    categories = DigistabStore.Store.list_categories()
 
     new_assigns = [
       changeset: Store.change_product(product),
       status: status,
-      actual_status: if(is_nil(product.status), do: List.first(status), else: product.status)
+      actual_status: (if (is_nil(product.status)), do: List.first(status), else: product.status),
+      categories: categories,
+      actual_category: (if (is_nil(product.category)), do: List.first(categories), else: product.category)
     ]
 
     {:ok,
@@ -31,15 +34,23 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
         DigistabStore.Store.get_status!(product_params["status_select"])
       end
 
+    category =
+      if product_params["category_select"] == "" do
+        socket.assigns.actual_category
+      else
+        DigistabStore.Store.get_category!(product_params["category_select"])
+      end
+
     changeset =
       socket.assigns.product
-      |> Repo.preload(:status)
-      |> Store.change_product(product_params |> Map.put("status", status))
+      |> Repo.preload([:status, :category])
+      |> Store.change_product(product_params |> Map.put("status", status) |> Map.put("category", category))
       |> Map.put(:action, :validate)
 
     assigns = [
       changeset: changeset,
-      actual_status: status
+      actual_status: status,
+      actual_category: category
     ]
 
     {:noreply, assign(socket, assigns)}
@@ -51,7 +62,8 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
   defp save_product(socket, :edit, product_params) do
     status = DigistabStore.Store.get_status!(product_params["status_select"])
-    params = product_params |> Map.put("status", status)
+    category = DigistabStore.Store.get_category!(product_params["category_select"])
+    params = product_params |> Map.put("status", status) |> Map.put("category", category)
 
     case Store.update_product(socket.assigns.product |> Repo.preload(:status), params) do
       {:ok, _product} ->
@@ -67,7 +79,8 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
   defp save_product(socket, :new, product_params) do
     status = DigistabStore.Store.get_status!(product_params["status_select"])
-    params = product_params |> Map.put("status", status)
+    category = DigistabStore.Store.get_category!(product_params["category_select"])
+    params = product_params |> Map.put("status", status) |> Map.put("category", category)
 
     case Store.create_product(params) do
       {:ok, _product} ->

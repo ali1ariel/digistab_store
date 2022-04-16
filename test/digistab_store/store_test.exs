@@ -144,4 +144,62 @@ defmodule DigistabStore.StoreTest do
       assert %Ecto.Changeset{} = Store.change_status(status)
     end
   end
+
+  describe "categories" do
+    alias DigistabStore.Store.Category
+
+    import DigistabStore.StoreFixtures
+
+    @invalid_attrs %{description: nil, id: nil, name: nil}
+
+    test "list_categories/0 returns all categories" do
+      category = category_fixture()
+      assert Store.list_categories() == [category]
+    end
+
+    test "get_category!/1 returns the category with given id" do
+      category = category_fixture()
+      assert Store.get_category!(category.id) == category
+    end
+
+    test "create_category/1 with valid data creates a category" do
+      valid_attrs = %{description: "some description", id: "7488a646-e31f-11e4-aace-600308960662", name: "some name"}
+
+      assert {:ok, %Category{} = category} = Store.create_category(valid_attrs)
+      assert category.description == "some description"
+      assert category.id == "7488a646-e31f-11e4-aace-600308960662"
+      assert category.name == "some name"
+    end
+
+    test "create_category/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Store.create_category(@invalid_attrs)
+    end
+
+    test "update_category/2 with valid data updates the category" do
+      category = category_fixture()
+      update_attrs = %{description: "some updated description", id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name"}
+
+      assert {:ok, %Category{} = category} = Store.update_category(category, update_attrs)
+      assert category.description == "some updated description"
+      assert category.id == "7488a646-e31f-11e4-aace-600308960668"
+      assert category.name == "some updated name"
+    end
+
+    test "update_category/2 with invalid data returns error changeset" do
+      category = category_fixture()
+      assert {:error, %Ecto.Changeset{}} = Store.update_category(category, @invalid_attrs)
+      assert category == Store.get_category!(category.id)
+    end
+
+    test "delete_category/1 deletes the category" do
+      category = category_fixture()
+      assert {:ok, %Category{}} = Store.delete_category(category)
+      assert_raise Ecto.NoResultsError, fn -> Store.get_category!(category.id) end
+    end
+
+    test "change_category/1 returns a category changeset" do
+      category = category_fixture()
+      assert %Ecto.Changeset{} = Store.change_category(category)
+    end
+  end
 end

@@ -37,4 +37,20 @@ defmodule DigistabStore.StoreFixtures do
 
     status
   end
+
+  @doc """
+  Generate a category.
+  """
+  def category_fixture(attrs \\ %{}) do
+    {:ok, category} =
+      attrs
+      |> Enum.into(%{
+        description: "some description",
+        id: "7488a646-e31f-11e4-aace-600308960662",
+        name: "some name"
+      })
+      |> DigistabStore.Store.create_category()
+
+    category
+  end
 end

@@ -3,6 +3,7 @@ defmodule DigistabStore.Store.Product do
   import Ecto.Changeset
 
   alias DigistabStore.Store.Status
+  alias DigistabStore.Store.Category
 
   schema "products" do
     field :description, :string
@@ -12,8 +13,10 @@ defmodule DigistabStore.Store.Product do
     field :quantity, :integer
 
     belongs_to :status, Status, foreign_key: :status_id, on_replace: :nilify
+    belongs_to :category, Category, foreign_key: :category_id, on_replace: :nilify
 
     field :status_select, :string, virtual: true
+    field :category_select, :string, virtual: true
 
     timestamps()
   end
