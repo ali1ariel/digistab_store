@@ -293,4 +293,196 @@ defmodule DigistabStore.Store do
   def change_category(%Category{} = category, attrs \\ %{}) do
     Category.changeset(category, attrs)
   end
+
+  alias DigistabStore.Store.Tag
+
+  @doc """
+  Returns the list of tags.
+
+  ## Examples
+
+      iex> list_tags()
+      [%Tag{}, ...]
+
+  """
+  def list_tags do
+    Repo.all(Tag)
+  end
+
+  @doc """
+  Gets a single tag.
+
+  Raises `Ecto.NoResultsError` if the Tag does not exist.
+
+  ## Examples
+
+      iex> get_tag!(123)
+      %Tag{}
+
+      iex> get_tag!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_tag!(id), do: Repo.get!(Tag, id)
+
+  @doc """
+  Creates a tag.
+
+  ## Examples
+
+      iex> create_tag(%{field: value})
+      {:ok, %Tag{}}
+
+      iex> create_tag(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_tag(attrs \\ %{}) do
+    %Tag{}
+    |> Tag.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a tag.
+
+  ## Examples
+
+      iex> update_tag(tag, %{field: new_value})
+      {:ok, %Tag{}}
+
+      iex> update_tag(tag, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_tag(%Tag{} = tag, attrs) do
+    tag
+    |> Tag.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a tag.
+
+  ## Examples
+
+      iex> delete_tag(tag)
+      {:ok, %Tag{}}
+
+      iex> delete_tag(tag)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_tag(%Tag{} = tag) do
+    Repo.delete(tag)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking tag changes.
+
+  ## Examples
+
+      iex> change_tag(tag)
+      %Ecto.Changeset{data: %Tag{}}
+
+  """
+  def change_tag(%Tag{} = tag, attrs \\ %{}) do
+    Tag.changeset(tag, attrs)
+  end
+
+  alias DigistabStore.Store.ProductTag
+
+  @doc """
+  Returns the list of products_tags.
+
+  ## Examples
+
+      iex> list_products_tags()
+      [%ProductTag{}, ...]
+
+  """
+  def list_products_tags do
+    Repo.all(ProductTag)
+  end
+
+  @doc """
+  Gets a single product_tag.
+
+  Raises `Ecto.NoResultsError` if the Product tag does not exist.
+
+  ## Examples
+
+      iex> get_product_tag!(123)
+      %ProductTag{}
+
+      iex> get_product_tag!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_product_tag!(id), do: Repo.get!(ProductTag, id)
+
+  @doc """
+  Creates a product_tag.
+
+  ## Examples
+
+      iex> create_product_tag(%{field: value})
+      {:ok, %ProductTag{}}
+
+      iex> create_product_tag(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_product_tag(attrs \\ %{}) do
+    %ProductTag{}
+    |> ProductTag.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a product_tag.
+
+  ## Examples
+
+      iex> update_product_tag(product_tag, %{field: new_value})
+      {:ok, %ProductTag{}}
+
+      iex> update_product_tag(product_tag, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_product_tag(%ProductTag{} = product_tag, attrs) do
+    product_tag
+    |> ProductTag.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a product_tag.
+
+  ## Examples
+
+      iex> delete_product_tag(product_tag)
+      {:ok, %ProductTag{}}
+
+      iex> delete_product_tag(product_tag)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_product_tag(%ProductTag{} = product_tag) do
+    Repo.delete(product_tag)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking product_tag changes.
+
+  ## Examples
+
+      iex> change_product_tag(product_tag)
+      %Ecto.Changeset{data: %ProductTag{}}
+
+  """
+  def change_product_tag(%ProductTag{} = product_tag, attrs \\ %{}) do
+    ProductTag.changeset(product_tag, attrs)
+  end
 end

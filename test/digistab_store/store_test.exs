@@ -202,4 +202,116 @@ defmodule DigistabStore.StoreTest do
       assert %Ecto.Changeset{} = Store.change_category(category)
     end
   end
+
+  describe "tags" do
+    alias DigistabStore.Store.Tag
+
+    import DigistabStore.StoreFixtures
+
+    @invalid_attrs %{description: nil, id: nil, name: nil}
+
+    test "list_tags/0 returns all tags" do
+      tag = tag_fixture()
+      assert Store.list_tags() == [tag]
+    end
+
+    test "get_tag!/1 returns the tag with given id" do
+      tag = tag_fixture()
+      assert Store.get_tag!(tag.id) == tag
+    end
+
+    test "create_tag/1 with valid data creates a tag" do
+      valid_attrs = %{description: "some description", id: "7488a646-e31f-11e4-aace-600308960662", name: "some name"}
+
+      assert {:ok, %Tag{} = tag} = Store.create_tag(valid_attrs)
+      assert tag.description == "some description"
+      assert tag.id == "7488a646-e31f-11e4-aace-600308960662"
+      assert tag.name == "some name"
+    end
+
+    test "create_tag/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Store.create_tag(@invalid_attrs)
+    end
+
+    test "update_tag/2 with valid data updates the tag" do
+      tag = tag_fixture()
+      update_attrs = %{description: "some updated description", id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name"}
+
+      assert {:ok, %Tag{} = tag} = Store.update_tag(tag, update_attrs)
+      assert tag.description == "some updated description"
+      assert tag.id == "7488a646-e31f-11e4-aace-600308960668"
+      assert tag.name == "some updated name"
+    end
+
+    test "update_tag/2 with invalid data returns error changeset" do
+      tag = tag_fixture()
+      assert {:error, %Ecto.Changeset{}} = Store.update_tag(tag, @invalid_attrs)
+      assert tag == Store.get_tag!(tag.id)
+    end
+
+    test "delete_tag/1 deletes the tag" do
+      tag = tag_fixture()
+      assert {:ok, %Tag{}} = Store.delete_tag(tag)
+      assert_raise Ecto.NoResultsError, fn -> Store.get_tag!(tag.id) end
+    end
+
+    test "change_tag/1 returns a tag changeset" do
+      tag = tag_fixture()
+      assert %Ecto.Changeset{} = Store.change_tag(tag)
+    end
+  end
+
+  describe "products_tags" do
+    alias DigistabStore.Store.ProductTag
+
+    import DigistabStore.StoreFixtures
+
+    @invalid_attrs %{id: nil}
+
+    test "list_products_tags/0 returns all products_tags" do
+      product_tag = product_tag_fixture()
+      assert Store.list_products_tags() == [product_tag]
+    end
+
+    test "get_product_tag!/1 returns the product_tag with given id" do
+      product_tag = product_tag_fixture()
+      assert Store.get_product_tag!(product_tag.id) == product_tag
+    end
+
+    test "create_product_tag/1 with valid data creates a product_tag" do
+      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662"}
+
+      assert {:ok, %ProductTag{} = product_tag} = Store.create_product_tag(valid_attrs)
+      assert product_tag.id == "7488a646-e31f-11e4-aace-600308960662"
+    end
+
+    test "create_product_tag/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Store.create_product_tag(@invalid_attrs)
+    end
+
+    test "update_product_tag/2 with valid data updates the product_tag" do
+      product_tag = product_tag_fixture()
+      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668"}
+
+      assert {:ok, %ProductTag{} = product_tag} = Store.update_product_tag(product_tag, update_attrs)
+      assert product_tag.id == "7488a646-e31f-11e4-aace-600308960668"
+    end
+
+    test "update_product_tag/2 with invalid data returns error changeset" do
+      product_tag = product_tag_fixture()
+      assert {:error, %Ecto.Changeset{}} = Store.update_product_tag(product_tag, @invalid_attrs)
+      assert product_tag == Store.get_product_tag!(product_tag.id)
+    end
+
+    test "delete_product_tag/1 deletes the product_tag" do
+      product_tag = product_tag_fixture()
+      assert {:ok, %ProductTag{}} = Store.delete_product_tag(product_tag)
+      assert_raise Ecto.NoResultsError, fn -> Store.get_product_tag!(product_tag.id) end
+    end
+
+    test "change_product_tag/1 returns a product_tag changeset" do
+      product_tag = product_tag_fixture()
+      assert %Ecto.Changeset{} = Store.change_product_tag(product_tag)
+    end
+  end
 end

@@ -18,6 +18,9 @@ defmodule DigistabStore.Store.Product do
     field :status_select, :string, virtual: true
     field :category_select, :string, virtual: true
 
+    has_many :products_tags, ProductTag
+    has_many :tags, through: [:products_tags, :tag]
+
     timestamps()
   end
 

@@ -53,4 +53,34 @@ defmodule DigistabStore.StoreFixtures do
 
     category
   end
+
+  @doc """
+  Generate a tag.
+  """
+  def tag_fixture(attrs \\ %{}) do
+    {:ok, tag} =
+      attrs
+      |> Enum.into(%{
+        description: "some description",
+        id: "7488a646-e31f-11e4-aace-600308960662",
+        name: "some name"
+      })
+      |> DigistabStore.Store.create_tag()
+
+    tag
+  end
+
+  @doc """
+  Generate a product_tag.
+  """
+  def product_tag_fixture(attrs \\ %{}) do
+    {:ok, product_tag} =
+      attrs
+      |> Enum.into(%{
+        id: "7488a646-e31f-11e4-aace-600308960662"
+      })
+      |> DigistabStore.Store.create_product_tag()
+
+    product_tag
+  end
 end

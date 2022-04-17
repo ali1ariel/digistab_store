@@ -12,6 +12,8 @@
 
 @import "./components/forms.css";
 
+@import "./components/tags.css";
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;
