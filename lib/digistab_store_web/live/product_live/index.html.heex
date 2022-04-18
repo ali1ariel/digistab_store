@@ -1,4 +1,6 @@
 <h1>Listing Products</h1>
+  
+<span><%= live_patch "New Products", to: Routes.product_index_path(@socket, :new), class: "btn-opal self-end" %></span>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.product_index_path(@socket, :index)}>
@@ -55,6 +57,4 @@
 
   </div>
 </div>
-  
-  <span><%= live_patch "New Products", to: Routes.product_index_path(@socket, :new) %></span>
   

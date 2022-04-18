@@ -4,7 +4,6 @@
   <%= for tag <- @selected_tags do %>
     <%= tag.name %>
   <% end %>
-  <%= if connected?(@ socket) do %> connected <% end %> 
 
   <.form
     let={f}
@@ -14,6 +13,8 @@
     phx-change="validate"
     phx-submit="save"
     class="flex flex-col ">
+    <div>
+
     <div class="md:grid md:grid-cols-3 gap-4">
       <div class="md:col-start-1 md:col-end-3 flex flex-col space-y-4">
         <div class="form-field-text">
@@ -34,6 +35,27 @@
     
         <div class="form-field-text">
           <%= label f, :media %>
+          <%= for {_ref, msg} <- @uploads.media.errors do %>
+            <p class="alert alert-tanger">
+              <%= Phoenix.Naming.humanize(msg) %>
+            </p>
+          <% end %>
+          <%= live_file_input @uploads.media %>
+
+          <%= for entry <- @uploads.media.entries do %>
+            <div class="flex flex-row">
+              <div class="flex flex-row h-24">
+                <%= live_img_preview entry %>
+              </div>
+              <div class="flex flex-row">
+                <progress max="100" value={entry.progress}/>
+              </div>
+              <div class="btn-indigo " phx-click="cancel-entry" phx-value-ref={entry.ref} phx-target={@myself}>
+                X
+              </div>
+            </div>
+          <% end %>
+
           <%= text_input f, :media, class: "form-text-input", placeholder: "https://www.example.com/photo.jpg" %>
           <%= error_tag f, :media %>
         </div>
@@ -80,10 +102,10 @@
 
       </div>
     </div>
-  
-  
+
     <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+      <%= submit "Save", phx_disable_with: "Saving...", class: "btn-indigo mt-12", phx_target: @myself %>
     </div>
+  </div>
   </.form>
 </div>

@@ -29,7 +29,7 @@ defmodule DigistabStore.Store.Product do
   def changeset(product, attrs) do
     product
     |> cast(attrs, [:name, :description, :price, :quantity, :media])
-    |> validate_required([:name, :description, :price, :quantity, :media])
+    |> validate_required([:name, :description, :price, :quantity])
     |> put_assoc(:status, Map.get(attrs, "status"))
     |> put_assoc(:category, Map.get(attrs, "category"))
   end

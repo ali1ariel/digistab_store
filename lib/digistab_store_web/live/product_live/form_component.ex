@@ -2,27 +2,42 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   use DigistabStoreWeb, :live_component
 
   alias DigistabStore.Store
+  alias DigistabStore.Store.Product
   alias DigistabStore.Repo
   alias DigistabStoreWeb.ProductLive.ProductTagsComponent
 
-  def mount(socket), do: {:ok, socket}
+  @impl true
+  def mount(socket) do
+
+    {:ok,
+      socket
+      |> allow_upload(:media, accept: ~w[.jpg .jpeg .png], max_entries: 1)
+    }
+  end
 
   @impl true
   def update(%{product: product} = assigns, socket) do
-    product = product |> Repo.preload([:status, :category])
+    product = product |> Repo.preload([:status, :category, :tags])
 
     status = DigistabStore.Store.list_status()
     categories = DigistabStore.Store.list_categories()
 
+    selected_tags = product.tags
+
     new_assigns = [
       changeset: Store.change_product(product),
       status: status,
-      actual_status: (if (is_nil(product.status)), do: List.first(status), else: product.status),
+      actual_status:
+      (if (is_nil(product.status)) do
+        List.first(status)
+      else
+        product.status
+      end),
       categories: categories,
       actual_category: (if (is_nil(product.category)), do: List.first(categories), else: product.category),
       ## tags
-      tags: Store.list_tags(),
-      selected_tags: [],
+      tags: Store.list_tags() -- selected_tags,
+      selected_tags: selected_tags,
       tag_search_phrase: "",
       tag_search_results: [],
       show_all_tags: false,
@@ -34,16 +49,21 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
      |> assign(new_assigns)}
   end
 
+
+  @impl true
+  def handle_event("save", %{"product" => product_params}, socket) do
+    save_product(socket, socket.assigns.action, product_params)
+  end
+
+
   @impl true
   def handle_event("validate", %{"product" => product_params}, socket) do
-    IO.inspect product_params
     status =
       if product_params["status_select"] == "" do
         socket.assigns.actual_status
       else
         Enum.find(socket.assigns.status, &(&1.id == product_params["status_select"]))
       end
-
     category =
       if product_params["category_select"] == "" do
         socket.assigns.actual_category
@@ -66,10 +86,9 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
-  def handle_event("save", %{"product" => product_params}, socket) do
-    save_product(socket, socket.assigns.action, product_params)
+  def handle_event("cancel-entry", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :media, ref)}
   end
-
   #### TAGS
 
   def handle_event("tag-search", %{"tag-name" => tag}, socket) do
@@ -145,7 +164,6 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   defp search(_, ""), do: []
 
   defp search(tags, tag_search_phrase) do
-    IO.inspect tag_search_phrase
     tags
     |> Enum.filter(&matches?(&1.name, tag_search_phrase))
     |> sorted()
@@ -171,12 +189,17 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
   defp save_product(socket, :edit, product_params) do
 
-    status = DigistabStore.Store.get_status!(product_params["status_select"])
-    category = DigistabStore.Store.get_category!(product_params["category_select"])
-    params = product_params |> Map.put("status", status) |> Map.put("category", category)
+    product = socket.assigns.product |> Repo.preload([:status, :category])
+    media = if (product_params["media"] in [product.media, ""]), do: consume_upload(socket, product_params["media"]), else: product_params["media"]
 
-    case Store.update_product(socket.assigns.product |> Repo.preload(:status), params) do
-      {:ok, _product} ->
+    params = set_product_params(product_params, media)
+
+    tags = socket.assigns.selected_tags
+
+
+    case Store.update_product(product, params) do
+      {:ok, product} ->
+        handle_tags(product, tags)
         {:noreply,
          socket
          |> put_flash(:info, "Product updated successfully")
@@ -187,22 +210,63 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     end
   end
 
+
   defp save_product(socket, :new, product_params) do
 
-    status = DigistabStore.Store.get_status!(product_params["status_select"])
-    category = DigistabStore.Store.get_category!(product_params["category_select"])
-    params = product_params |> Map.put("status", status) |> Map.put("category", category)
+    media = if (product_params["media"] == ""), do: consume_upload(socket, product_params["media"]), else: product_params["media"]
+    params = set_product_params(product_params, media)
 
-    case Store.create_product(params) do
-      {:ok, _product} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Product created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+    if media in ["", nil] do
+        {:noreply, socket
+        |> put_flash(:error, "Por favor, insira um arquivo de imagem ou um link.")}
+    else
+      tags = socket.assigns.selected_tags
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+      case Store.create_product(%Product{}, params) do
+        {:ok, product} ->
+          handle_tags(product, tags)
+          {:noreply,
+          socket
+          |> put_flash(:info, "Product created successfully")
+          |> push_redirect(to: socket.assigns.return_to)}
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          {:noreply, assign(socket, changeset: changeset)}
+      end
     end
   end
 
+  defp set_product_params(product_params, media) do
+    status = DigistabStore.Store.get_status!(product_params["status_select"])
+    category = DigistabStore.Store.get_category!(product_params["category_select"])
+    product_params |> Map.put("status", status) |> Map.put("category", category) |> Map.put("media", media)
+  end
+
+  defp ext(entry) do
+    [ext | _] = MIME.extensions(entry.client_type)
+    ext
+  end
+
+  defp consume_upload(socket, media) do
+      case consume_uploaded_entries(socket, :media, fn %{path: path}, entry ->
+      dest = Path.join([:code.priv_dir(:digistab_store), "static", "uploads", "#{entry.uuid}.#{ext(entry)}"])
+
+      File.cp!(path, dest)
+
+      {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
+    end) do
+      [] -> media
+      [new_media] -> new_media
+    end
+  end
+
+  defp handle_tags(product, tags) do
+    product = product |> Repo.preload([:tags])
+    tags_in_product = product.tags
+    tags_to_add = tags -- tags_in_product
+    tags_to_remove = tags_in_product -- tags
+
+    Enum.map(tags_to_add, &Store.assoc_product_tag(product, &1))
+    Enum.map(tags_to_remove, &Store.dissoc_product_tag(product, &1))
+  end
 end

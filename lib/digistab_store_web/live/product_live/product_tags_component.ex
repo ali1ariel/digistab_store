@@ -2,8 +2,6 @@ defmodule DigistabStoreWeb.ProductLive.ProductTagsComponent do
   use DigistabStoreWeb, :live_component
 
 
-  def mount(socket), do: {:ok, socket}
-
   def update(
         %{
           id: id,
