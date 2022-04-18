@@ -49,8 +49,8 @@ defmodule DigistabStore.Store do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_product(attrs \\ %{}) do
-    %Product{}
+  def create_product(product, attrs \\ %{}) do
+    product
     |> Product.changeset(attrs)
     |> Repo.insert()
   end
@@ -422,42 +422,6 @@ defmodule DigistabStore.Store do
   def get_product_tag!(id), do: Repo.get!(ProductTag, id)
 
   @doc """
-  Creates a product_tag.
-
-  ## Examples
-
-      iex> create_product_tag(%{field: value})
-      {:ok, %ProductTag{}}
-
-      iex> create_product_tag(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_product_tag(attrs \\ %{}) do
-    %ProductTag{}
-    |> ProductTag.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a product_tag.
-
-  ## Examples
-
-      iex> update_product_tag(product_tag, %{field: new_value})
-      {:ok, %ProductTag{}}
-
-      iex> update_product_tag(product_tag, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_product_tag(%ProductTag{} = product_tag, attrs) do
-    product_tag
-    |> ProductTag.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a product_tag.
 
   ## Examples
@@ -473,16 +437,13 @@ defmodule DigistabStore.Store do
     Repo.delete(product_tag)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking product_tag changes.
+  def assoc_product_tag(%Product{} = product, %Tag{} = tag) do
+    %ProductTag{product_id: product.id, tag_id: tag.id}
+    |> Repo.insert()
+  end
 
-  ## Examples
-
-      iex> change_product_tag(product_tag)
-      %Ecto.Changeset{data: %ProductTag{}}
-
-  """
-  def change_product_tag(%ProductTag{} = product_tag, attrs \\ %{}) do
-    ProductTag.changeset(product_tag, attrs)
+  def dissoc_product_tag(%Product{} = product, %Tag{} = tag) do
+    Repo.get_by!(ProductTag, [product_id: product.id, tag_id: tag.id])
+    |> delete_product_tag()
   end
 end

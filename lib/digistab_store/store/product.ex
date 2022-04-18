@@ -4,6 +4,7 @@ defmodule DigistabStore.Store.Product do
 
   alias DigistabStore.Store.Status
   alias DigistabStore.Store.Category
+  alias DigistabStore.Store.ProductTag
 
   schema "products" do
     field :description, :string
@@ -30,5 +31,6 @@ defmodule DigistabStore.Store.Product do
     |> cast(attrs, [:name, :description, :price, :quantity, :media])
     |> validate_required([:name, :description, :price, :quantity, :media])
     |> put_assoc(:status, Map.get(attrs, "status"))
+    |> put_assoc(:category, Map.get(attrs, "category"))
   end
 end
