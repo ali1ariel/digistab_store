@@ -1,0 +1,10 @@
+.form-text-input {
+    @apply border border-gray-300 hover:border-gray-500 rounded py-1 px-4 w-full;
+}
+.form-field-text {
+    @apply flex flex-col w-full my-4; 
+}
+
+.form-row {
+    @apply flex flex-row space-x-4;
+}

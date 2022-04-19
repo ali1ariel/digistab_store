@@ -1,0 +1,41 @@
+<div>
+    <%= form_tag "#", [as: "ProductsTagsComponent"] do %>
+        <div class="component flex flex-col space-y-4 border px-4 py-2">
+            <div class="component-selected-tags">
+                <%= for tag <- @selected_tags do %>
+                    <div class="selected-tag" title={tag.description}  phx-target={@form_target} phx-click="remove-tag" phx-value-tag-id={tag.id}>
+                        <%= tag.name %>
+                    </div>
+                <% end %>
+            </div>
+            <div class="input">
+                <input type="text" name="tag-name" phx-change="tag-search" phx-target={@form_target} value={@tag_search_phrase} autocomplete="off" class="border px-4 py-2 rounded-lg w-full" />
+            </div>
+            <div class="component-search-results">
+                <%= for tag <- @tag_search_results do %>
+                    <div class="result-tag" title={tag.description} phx-target={@form_target} phx-click="select-tag" phx-value-tag-id={tag.id}>
+                        <%= tag.name |> format_search_result(@tag_search_phrase) |> raw() %>
+                    </div>
+                <% end %>
+            </div>
+            <%= if @tag_search_phrase |> String.length() < 1 and @show_all_tags do %>
+                <div class="component-tag-list">
+                    <%= for tag <- @tags do %>
+                        <div class="listed-tag" title={tag.description} phx-target={@form_target} phx-click="select-tag" phx-value-tag-id={tag.id}>
+                            <%= tag.name %>
+                        </div>
+                    <% end %>
+                </div>
+            <% end %>
+            <div class="component-buttons">
+                <div class="btn-opal" title="recarregar tags" phx-click="refresh-tags" phx-target={@form_target}>
+                    <i class="fa-solid fa-arrow-rotate-right"></i>
+                </div>
+                <div class="btn-indigo" title="abrir/fechar lista de tags" phx-click="all-tags" phx-target={@form_target}>
+                    <i class="fa-solid fa-list"></i>
+                </div>
+            </div>
+            
+        </div>
+    <% end %>
+</div>
