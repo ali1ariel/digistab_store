@@ -1,7 +1,6 @@
 import Quill from 'quill';
 export let TextEditor = {
   mounted() {
-    console.log('Mounting');
     let quill = new Quill(this.el, {
       theme: 'snow'
     });
@@ -17,13 +16,11 @@ export let TextEditor = {
     function updateHtmlOutput()
     {
         let html = getQuillHtml();
-        console.log ( html );
         document.getElementById('product-form_description').value = html;
     }
     
 
   },
   updated(){
-    console.log('U');
   }
 }

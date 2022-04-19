@@ -30,12 +30,17 @@ A partir do browser acesse:
 
 ### Já implementado:
 
-* Criação de produtos, com utilização de campos e componentes LiveView.
+* Criação de produtos, com utilização de campos e componentes LiveView. Campo de media é possível altenar em anexar arquivo ou link da imagem.
 
 * Visualização dos produtos, podendo organizá-los em Status ou Categoria.
 
 * Início de uma versão responsiva, onde é possível visualizar os produtos de forma fácil no aparelho móvel.
 
+### Componentes LiveView interagíveis:
+  * Na tela inicial é possível filtrar os produtos com base na categoria e no status.
+* 
+  * Na tela de criação a seleção de Status, Categoria e Tags são feitas através de LiveView. A imagem do produto é possível ser feita de diferentes formas, com o envio do arquivo via LiveUpload, é possível tanto selecioná-lo em seu computador quanto arrastar até o componente, clicando em enviar por link, o componente se transforma, para que possa digitar o link de uma imagem.
+  
 ### Bugs conhecidos:
 * A integração com um editor WYSIWYG é feita através de Hooks JS, no momento não foi possível carregar os dados já salvos da descrição do produto para editar no próprio editor. porém é possível escrever uma informação do zero para substituí-la.
 

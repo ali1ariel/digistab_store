@@ -89,6 +89,8 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
+
+  # Handle with the change to file or url at the image field.
   def handle_event("media-field", %{}, socket) do
     case socket.assigns.uploads.media.entries |> List.first() do
       nil ->
@@ -102,11 +104,16 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     end
   end
 
+
+  # Cancel the refered upload.
   def handle_event("cancel-entry", %{"ref" => ref}, socket) do
     {:noreply, cancel_upload(socket, :media, ref)}
   end
 
   ######## TAGS
+
+
+  #  search in tags preloaded if there's one that matches with the searching phrase.
   def handle_event("tag-search", %{"tag-name" => tag}, socket) do
     found_tags = search(socket.assigns.tags, tag)
 
@@ -120,6 +127,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
+  # when a tag is clicked, and it is in available tags, it is added to the selected tags.
   def handle_event("select-tag", %{"tag-id" => tag_id}, socket) do
     tag = socket.assigns.tags |> Enum.find(&(&1.id == tag_id))
 
@@ -140,6 +148,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
+  # when a selected tag is clicked, it is removed from the list.
   def handle_event("remove-tag", %{"tag-id" => tag_id}, socket) do
     tag = socket.assigns.selected_tags |> Enum.find(&(&1.id == tag_id))
 
@@ -152,6 +161,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
+  # when the button list is clicked, it shows all the preloaded tags or hide them.
   def handle_event("all-tags", %{}, socket) do
     assigns = [
       tag_search_phrase: "",
@@ -162,6 +172,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
+  # If you think the tag is not in the list, you can refresh it.
   def handle_event("refresh-tags", %{}, socket) do
     tags = DigistabStore.Store.list_tags()
 
@@ -174,14 +185,17 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     {:noreply, assign(socket, assigns)}
   end
 
+  # default function to catch errors.
   defp search(_, ""), do: []
 
+  # verify tags that matches with the search phrase, returning this list sorted.
   defp search(tags, tag_search_phrase) do
     tags
     |> Enum.filter(&matches?(&1.name, tag_search_phrase))
     |> sorted()
   end
 
+  # verify the match, looking at each possible position in the tag name, return true if it matches.
   defp matches?(first, second) do
     String.contains?(
       String.downcase(first),
@@ -189,33 +203,24 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     )
   end
 
-  def format_search_result(search_result, tag_search_phrase) do
-    split_at = String.length(tag_search_phrase)
-    {selected, rest} = String.split_at(search_result, split_at)
-
-    "<strong>#{selected}</strong>#{rest}"
-  end
-
+  # sort the tags by name.
   defp sorted(tags), do: Enum.sort_by(tags, &String.first(&1.name))
 
+  #save product, case you're editing.
   defp save_product(socket, :edit, product_params) do
     product = socket.assigns.product |> Repo.preload([:status, :category])
-
-    product_params =
-      case handle_media(socket, product_params) do
-        {:ok, :no_media} ->
-          product_params
-
-        {:ok, media} ->
-          product_params
-          |> Map.put("media", media)
-      end
-
-    params = set_product_params(product_params)
-
     tags = socket.assigns.selected_tags
 
-    case Store.update_product(product, params) do
+    case handle_media(socket, product_params) do
+      {:ok, :no_media} ->
+        product_params
+
+      {:ok, media} ->
+        product_params
+        |> Map.put("media", media)
+    end
+    |> set_product_params()
+    |> then(&case Store.update_product(product, &1) do
       {:ok, product} ->
         handle_tags(product, tags)
 
@@ -226,9 +231,10 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
-    end
+    end)
   end
 
+  #save the product, case you're creating.
   defp save_product(socket, :new, product_params) do
     case handle_media(socket, product_params) do
       {:ok, :no_media} ->
@@ -257,6 +263,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     end
   end
 
+  # an helper to set the product params and makes the code cleaner.
   defp set_product_params(product_params) do
     status = DigistabStore.Store.get_status!(product_params["status_select"])
     category = DigistabStore.Store.get_category!(product_params["category_select"])
@@ -264,11 +271,6 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     product_params
     |> Map.put("status", status)
     |> Map.put("category", category)
-  end
-
-  defp ext(entry) do
-    [ext | _] = MIME.extensions(entry.client_type)
-    ext
   end
 
   defp consume_upload(socket) do
@@ -288,6 +290,11 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     |> then(fn [path] -> {:ok, path} end)
   end
 
+  defp ext(entry) do
+    [ext | _] = MIME.extensions(entry.client_type)
+    ext
+  end
+
   defp handle_media(socket, product_params) do
     if(
       !Map.has_key?(product_params, "media") and
@@ -301,7 +308,6 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
         {:ok, Map.get(product_params, "media")}
       end
     end
-    |> IO.inspect()
   end
 
   defp handle_tags(product, tags) do

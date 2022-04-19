@@ -25,11 +25,4 @@ defmodule DigistabStoreWeb.ProductLive.ProductTagsComponent do
 
     {:ok, assign(socket, assigns)}
   end
-
-  def format_search_result(search_result, tag_search_phrase) do
-    split_at = String.length(tag_search_phrase)
-    {selected, rest} = String.split_at(search_result, split_at)
-
-    "<strong>#{selected}</strong>#{rest}"
-  end
 end

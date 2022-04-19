@@ -14,7 +14,7 @@
             <div class="component-search-results">
                 <%= for tag <- @tag_search_results do %>
                     <div class="result-tag" title={tag.description} phx-target={@form_target} phx-click="select-tag" phx-value-tag-id={tag.id}>
-                        <%= tag.name |> format_search_result(@tag_search_phrase) |> raw() %>
+                        <%= tag.name %>
                     </div>
                 <% end %>
             </div>
