@@ -1,0 +1,21 @@
+.listed-tag {
+    @apply border px-4 py-2 rounded mx-2 cursor-pointer bg-white-green;
+}
+.selected-tag {
+    @apply border px-4 py-2 rounded mx-2 cursor-pointer bg-white-red;
+}
+.result-tag {
+    @apply border px-4 py-2 rounded mx-2 cursor-pointer bg-white-blue;
+}
+.component-tag-list {
+    @apply grid grid-cols-2 gap-2;
+}
+.component-selected-tags {
+    @apply grid grid-cols-2 gap-2;
+}
+.component-search-results {
+    @apply grid grid-cols-2 gap-2;
+}
+.component-buttons {
+    @apply  flex flex-row space-x-2 justify-end;
+}
