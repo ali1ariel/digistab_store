@@ -12,12 +12,17 @@ defmodule DigistabStore.StoreTest do
 
     test "list_products/0 returns all products" do
       product = product_fixture()
-      assert Store.list_products() |> DigistabStore.Repo.preload([:status, :category]) == [product]
+
+      assert Store.list_products() |> DigistabStore.Repo.preload([:status, :category]) == [
+               product
+             ]
     end
 
     test "get_product!/1 returns the product with given id" do
       product = product_fixture()
-      assert Store.get_product!(product.id) |> DigistabStore.Repo.preload([:status, :category]) == product
+
+      assert Store.get_product!(product.id) |> DigistabStore.Repo.preload([:status, :category]) ==
+               product
     end
 
     test "create_product/1 with valid data creates a product" do
@@ -63,13 +68,18 @@ defmodule DigistabStore.StoreTest do
     test "update_product/2 with invalid data returns error changeset" do
       product = product_fixture()
       assert {:error, %Ecto.Changeset{}} = Store.update_product(product, @invalid_attrs)
-      assert product == Store.get_product!(product.id) |> DigistabStore.Repo.preload([:status, :category])
+
+      assert product ==
+               Store.get_product!(product.id) |> DigistabStore.Repo.preload([:status, :category])
     end
 
     test "delete_product/1 deletes the product" do
       product = product_fixture()
       assert {:ok, %Product{}} = Store.delete_product(product)
-      assert_raise Ecto.NoResultsError, fn -> Store.get_product!(product.id) |> DigistabStore.Repo.preload([:status, :category]) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Store.get_product!(product.id) |> DigistabStore.Repo.preload([:status, :category])
+      end
     end
 
     test "change_product/1 returns a product changeset" do
@@ -159,7 +169,11 @@ defmodule DigistabStore.StoreTest do
     end
 
     test "create_category/1 with valid data creates a category" do
-      valid_attrs = %{description: "some description", id: "7488a646-e31f-11e4-aace-600308960662", name: "some name"}
+      valid_attrs = %{
+        description: "some description",
+        id: "7488a646-e31f-11e4-aace-600308960662",
+        name: "some name"
+      }
 
       assert {:ok, %Category{} = category} = Store.create_category(valid_attrs)
       assert category.description == "some description"
@@ -172,7 +186,12 @@ defmodule DigistabStore.StoreTest do
 
     test "update_category/2 with valid data updates the category" do
       category = category_fixture()
-      update_attrs = %{description: "some updated description", id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name"}
+
+      update_attrs = %{
+        description: "some updated description",
+        id: "7488a646-e31f-11e4-aace-600308960668",
+        name: "some updated name"
+      }
 
       assert {:ok, %Category{} = category} = Store.update_category(category, update_attrs)
       assert category.description == "some updated description"
@@ -215,7 +234,11 @@ defmodule DigistabStore.StoreTest do
     end
 
     test "create_tag/1 with valid data creates a tag" do
-      valid_attrs = %{description: "some description", id: "7488a646-e31f-11e4-aace-600308960662", name: "some name"}
+      valid_attrs = %{
+        description: "some description",
+        id: "7488a646-e31f-11e4-aace-600308960662",
+        name: "some name"
+      }
 
       assert {:ok, %Tag{} = tag} = Store.create_tag(valid_attrs)
       assert tag.description == "some description"
@@ -228,7 +251,12 @@ defmodule DigistabStore.StoreTest do
 
     test "update_tag/2 with valid data updates the tag" do
       tag = tag_fixture()
-      update_attrs = %{description: "some updated description", id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name"}
+
+      update_attrs = %{
+        description: "some updated description",
+        id: "7488a646-e31f-11e4-aace-600308960668",
+        name: "some updated name"
+      }
 
       assert {:ok, %Tag{} = tag} = Store.update_tag(tag, update_attrs)
       assert tag.description == "some updated description"

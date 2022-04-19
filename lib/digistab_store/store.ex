@@ -443,7 +443,7 @@ defmodule DigistabStore.Store do
   end
 
   def dissoc_product_tag(%Product{} = product, %Tag{} = tag) do
-    Repo.get_by!(ProductTag, [product_id: product.id, tag_id: tag.id])
+    Repo.get_by!(ProductTag, product_id: product.id, tag_id: tag.id)
     |> delete_product_tag()
   end
 end

@@ -14,6 +14,6 @@
   %{
     name: "Decoração",
     description: "Enfeites para deixar a sua casa mais linda que nunca."
-  },
+  }
 ]
 |> Enum.map(&DigistabStore.Store.create_category/1)

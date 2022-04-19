@@ -6,7 +6,6 @@ defmodule DigistabStore.Store.ProductTag do
   alias DigistabStore.Store.Tag
 
   schema "products_tags" do
-
     belongs_to :product, Product, foreign_key: :product_id, on_replace: :nilify
     belongs_to :tag, Tag, foreign_key: :tag_id, on_replace: :nilify
 
