@@ -2,6 +2,7 @@ defmodule DigistabStoreWeb.ProductLive.Show do
   use DigistabStoreWeb, :live_view
 
   alias DigistabStore.Store
+  alias DigistabStore.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,7 +14,7 @@ defmodule DigistabStoreWeb.ProductLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:product, Store.get_product!(id))}
+     |> assign(:product, Store.get_product!(id) |> Repo.preload([:status, :category, :tags]))}
   end
 
   defp page_title(:show), do: "Show Product"

@@ -1,5 +1,4 @@
-<div>
-  <h2><%= @title %></h2>
+<div class="md:w-fit p-4 rounded shadow-lg bg-gray-200">
 
   <%= for tag <- @selected_tags do %>
     <%= tag.name %>
@@ -13,18 +12,20 @@
     phx-change="validate"
     phx-submit="save"
     class="flex flex-col ">
-    <div>
+    <div class="w-fit">
 
     <div class="md:grid md:grid-cols-3 gap-4">
       <div class="md:col-start-1 md:col-end-3 flex flex-col space-y-4">
-        <div class="form-field-text">
-          <%= label f, :name %>
-          <%= text_input f, :name, class: "form-text-input"%>
+        <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
+
+          <div class="form-field-text"> 
+            <label>Nome</label>     
+            <%= text_input f, :name, class: "form-text-input"%>
           <%= error_tag f, :name %>
         </div>
     
-        <div class="form-field-text">
-          <%= label f, :description %>
+        <div class="form-field-text"> 
+          <label> Descrição</label>     
           <div id="product-description-div" class="mb-8" phx-update="ignore">
             <div id="editor" phx-hook="TextEditor" class="mb-4" phx-target={@myself} >
             </div>
@@ -32,62 +33,90 @@
           <%= hidden_input f, :description, rows: 10, class: "form-text-input" %>
           <%= error_tag f, :description %>
         </div>
+      </div>
+
+      <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
+
     
         <div class="form-field-text">
-          <%= label f, :media %>
-          <%= for {_ref, msg} <- @uploads.media.errors do %>
-            <p class="alert alert-tanger">
-              <%= Phoenix.Naming.humanize(msg) %>
-            </p>
-          <% end %>
-          <%= live_file_input @uploads.media %>
-
-          <%= for entry <- @uploads.media.entries do %>
-            <div class="flex flex-row">
-              <div class="flex flex-row h-24">
-                <%= live_img_preview entry %>
-              </div>
-              <div class="flex flex-row">
-                <progress max="100" value={entry.progress}/>
-              </div>
-              <div class="btn-indigo " phx-click="cancel-entry" phx-value-ref={entry.ref} phx-target={@myself}>
-                X
+        <%= if @display_media_field == false do %>
+        <label class="mx-auto w-fit italic mt-2"> Arquivo de Imagem</label>    
+          <div>            
+          <div class="flex flex-col h-fit border border-dashed border-2 px-4 py-2 my-4 rounded mx-24 h-32 justify-center y-space-4" phx-drop-target={@uploads.media.ref}>
+            <div class="h-full w-fit mx-auto flex flex-col justify-center space-y-4">
+              <%= for {_ref, msg} <- @uploads.media.errors do %>
+              <p class="alert alert-tanger">
+                <%= Phoenix.Naming.humanize(msg) %>
+              </p>
+              <% end %>
+              <%= live_file_input @uploads.media, class: "w-fit mx-auto border rounded px-4 py-2" %>
+              <div class="italic text-center">
+                Arraste uma imagem .jpeg ou .png aqui para adicionar uma imagem. 
               </div>
             </div>
-          <% end %>
+              <div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field" phx-target={@myself}>Enviar URL de imagem</div>
+          </div>
+            <%= for entry <- @uploads.media.entries do %>
+              <div class="flex flex-row justify-around">
+                <div class="flex flex-row h-24 align-center self-center">
+                  <%= live_img_preview(entry) %>
+                </div>
+                <div class="flex flex-row align-center">
+                  <progress max="100" value={entry.progress} class="rounded self-center"/>
+                </div>
+                <div class="btn-indigo  align-center self-center" phx-click="cancel-entry"  phx-value-file={false} phx-value-ref={entry.ref} phx-target={@myself}>
+                  X
+                </div>
+              </div>
+            <% end %>
 
-          <%= text_input f, :media, class: "form-text-input", placeholder: "https://www.example.com/photo.jpg" %>
-          <%= error_tag f, :media %>
         </div>
-    
+        <% else %>
+        <div class="flex flex-col space-y-4">
+          <label class="mx-auto w-fit italic mt-2"> URL da imagem</label>    
+          <%= text_input f, :media, class: "form-text-input", placeholder: "https://www.example.com/photo.jpg" %>
+          <%= error_tag f, :media %>  
+          <div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field"  phx-target={@myself}>Enviar arquivo de imagem</div>
+        </div>
+
+        <% end %>
+        </div>
+      </div>
+      <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
+
         <div class="form-row">
           <div class="form-field-text">
-            <%= label f, :price %>
+            <label> Preço</label>     
             <%= number_input f, :price, class: "form-text-input" %>
             <%= error_tag f, :price %>
           </div>
         
           <div class="form-field-text">
-            <%= label f, :quantity %>
+            <label> Quantidade</label>     
             <%= number_input f, :quantity, class: "form-text-input" %>
             <%= error_tag f, :quantity %>
           </div>
         </div>
       </div>
+      </div>
       <div class="md:grid md:col-start-3 md:col-end-4 space-y-4">
-        <div>
-          <%= label f, :status_select %>
+        <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
+        <div class="ĥ-fit py-4">
+          <label>Status</label>
           <%= select f, :status_select, Enum.map(@status, &{&1.name, &1.id}) |> Enum.sort_by(fn {_name, id} -> (id != @actual_status.id) end), class: "form-text-input" %>
           <%= error_tag f, :status_select %>
           <%= @actual_status.description %>
         </div>
-        <div>
-          <%= label f, :category_select %>
+      </div>
+        <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
+        <div class="mb-4 py-2 pb-8 border-b-2">
+          <label>Categoria</label>
           <%= select f, :category_select, Enum.map(@categories, &{&1.name, &1.id}) |> Enum.sort_by(fn {_name, id} -> (id != @actual_category.id) end), class: "form-text-input" %>
           <%= error_tag f, :category_select %>
           <%= @actual_category.description %>
         </div>
-        <div class="py-1 w-full">                    
+        <div class="py-1 w-full">   
+          <label>Tags</label>                 
           <.live_component 
           module={ProductTagsComponent} 
           id="ProductTagsComponent" 
@@ -99,12 +128,13 @@
           show_all_tags={@show_all_tags}
           />
         </div>
+      </div>
 
       </div>
     </div>
 
     <div>
-      <%= submit "Save", phx_disable_with: "Saving...", class: "btn-indigo mt-12", phx_target: @myself %>
+      <%= submit "Salvar Produto", phx_disable_with: "Saving...", class: "btn-indigo mt-12 flex mx-auto", phx_target: @myself %>
     </div>
   </div>
   </.form>

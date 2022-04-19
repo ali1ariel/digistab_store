@@ -14,6 +14,8 @@
 
 @import "./components/tags.css";
 
+@import "./components/status.css";
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;
@@ -76,11 +78,7 @@
 }
 
 .phx-modal-content {
-  background-color: #fefefe;
-  margin: 15vh auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  @apply flex bg-transparent h-fit md:w-3/4 2xl:w-2/3 mx-auto md:my-8 2xl:my-12 border rounded;
 }
 
 .phx-modal-close {

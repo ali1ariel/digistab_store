@@ -1,32 +1,57 @@
-<h1>Listing Products</h1>
-  
-<span><%= live_patch "New Products", to: Routes.product_index_path(@socket, :new), class: "btn-opal self-end" %></span>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.product_index_path(@socket, :index)}>
     <.live_component
-      module={DigistabStoreWeb.ProductLive.FormComponent}
-      id={@product.id || :new}
-      title={@page_title}
-      action={@live_action}
-      product={@product}
-      return_to={Routes.product_index_path(@socket, :index)}
+    module={DigistabStoreWeb.ProductLive.FormComponent}
+    id={@product.id || :new}
+    title={@page_title}
+    action={@live_action}
+    product={@product}
+    return_to={Routes.product_index_path(@socket, :index)}
     />
   </.modal>
 <% end %>
 
-<div class="md:mx-12 w-full lg:w-2/3 responsive-box ">
-
-
+<div class="my-12 flex w-fit mx-auto">
+  <span><%= live_patch "Criar Produto", to: Routes.product_index_path(@socket, :new), class: "btn-opal self-end" %></span>
+</div>  
+  <div class="my-12 w-full md:w-1/4 flex flex-col w-fit mx-auto border rounded shadow-lg bg-white py-4">
+    <div class="self-center">Status</div>
+    <div class="flex flex-row justify-around">
+      <div class={if @status == nil, do: "btn-indigo", else: "btn-indigo-light"}  phx-click="set-status" phx-value-status={nil}>Todos</div>
+      <%= for status <- @status_collection do %>
+        <div class={if @status == status, do: "btn-indigo", else: "btn-indigo-light"}  phx-click="set-status" phx-value-status={status.id}><%= status.name %></div>
+      <% end %>
+    </div>
+  </div>
+  <div class="flex flex-col md:flex-row">
+      
+  <div class="my-12 w-full md:w-1/4 flex flex-col w-fit mx-auto border rounded shadow-lg bg-white py-4">
+    <div class="self-center">Categorias</div>
+    <div class="flex flex-col space-y-2">
+      <div class={if @category == nil, do: "btn-green-full", else: "btn-opal-full"} phx-click="set-category" phx-value-category={nil}>Todos</div>
+      <%= for category <- @categories do %>
+        <div class={if @category == category, do: "btn-green-full", else: "btn-opal-full"} phx-click="set-category" phx-value-category={category.id}><%= category.name %></div>
+      <% end %>
+    </div>
+  </div>
+<div class="md:mx-auto w-full lg:w-2/3 responsive-box ">
   <div class="responsive-grid-products">
-    <%= for product <- @products do %>
+    <%= for product <- @products |> Enum.sort_by(& &1.status.name) do %>
+      <% opacity = active?(product) %>
       <div class="border rounded-lg shadow-inner box-border bg-white">
+        <div class={opacity}>
         <%= live_redirect to: Routes.product_show_path(@socket, :show, product) do %>
           <div class="flex lg:flex-col flex-row h-full w-full p-2">
-            <div class="w-1/2 md:w-full rounded-lg mx-4 md:mx-0">
+            <div class="w-fit ml-auto mb-1">
+              <div class={product.status.name <> ""}>
+                <%= product.status.name %>
+              </div>
+            </div>
+            <div class="h-1/2 md:w-full rounded-lg mx-4 md:mx-0">
               <image src={product.media} class="object-fill w-full rounded-lg p-2 md:p-0" />
             </div>
-            <div class="flex flex-col p-2 justify-between h-full w-full">
+            <div class="flex flex-col p-2 justify-between h-full w-full space-between">
               <div class="flex flex-row font-semibold w-full mx-auto text-center text-blue-400 text-2xl">
                 <%= product.name  |> DigistabStore.HelperFunctions.cut_string(40) %>
               </div>
@@ -48,6 +73,8 @@
             </div>
           </div>
           <% end %>
+          
+        </div>
       </div>
     
     <%#= live_patch "Edit", to: Routes.product_index_path(@socket, :edit, products) %>
@@ -56,5 +83,6 @@
     <% end %>
 
   </div>
+</div>
 </div>
   

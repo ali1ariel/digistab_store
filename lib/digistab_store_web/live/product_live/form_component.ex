@@ -41,6 +41,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
       tag_search_phrase: "",
       tag_search_results: [],
       show_all_tags: false,
+      display_media_field: false
     ]
 
     {:ok,
@@ -85,6 +86,20 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
     {:noreply, assign(socket, assigns)}
   end
+
+  def handle_event("media-field", %{}, socket) do
+    case socket.assigns.uploads.media.entries |> List.first do
+      nil ->
+        {:noreply, socket |> assign(display_media_field: !socket.assigns.display_media_field) }
+      entry ->
+        {:noreply,
+        socket
+        |> assign(display_media_field: !socket.assigns.display_media_field)
+        |> cancel_upload(:media, entry.ref)
+      }
+    end
+  end
+
 
   def handle_event("cancel-entry", %{"ref" => ref}, socket) do
     {:noreply, cancel_upload(socket, :media, ref)}
@@ -213,7 +228,10 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
   defp save_product(socket, :new, product_params) do
 
-    media = if (product_params["media"] == ""), do: consume_upload(socket, product_params["media"]), else: product_params["media"]
+    product_params
+    |> IO.inspect
+
+    media = if (!Map.has_key?(product_params, "media")), do: consume_upload(socket, product_params["media"]), else: product_params["media"]
     params = set_product_params(product_params, media)
 
     if media in ["", nil] do

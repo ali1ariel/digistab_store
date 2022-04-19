@@ -1,15 +1,24 @@
 .btn-indigo {
-  @apply w-fit h-fit bg-indigo-700 text-white font-bold py-2 px-4 rounded cursor-pointer;
+  @apply w-fit h-fit bg-indigo-700 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 focus:ring focus:ring-indigo-300;
 }
 .btn-indigo-light {
-  @apply w-fit h-fit bg-indigo-400 text-white font-bold py-2 px-4 rounded cursor-pointer;
+  @apply w-fit h-fit bg-indigo-400 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0;
 }
 .btn-opal {
-  @apply w-fit h-fit bg-opal text-white font-bold py-2 px-4 rounded cursor-pointer;
+  @apply w-fit h-fit bg-opal text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0;
+}
+.btn-opal-full {
+  @apply h-fit text-center bg-opal text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 mx-8;
 }
 .btn-coral {
-  @apply w-fit h-fit bg-coral text-white font-bold py-2 px-4 rounded cursor-pointer;
+  @apply w-fit h-fit bg-coral text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0;
+}
+.btn-coral-full {
+  @apply h-fit text-center bg-coral text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 mx-8;
 }
 .btn-green {
-  @apply w-fit h-fit bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer;
+  @apply w-fit h-fit bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 focus:ring focus:ring-indigo-300;
+}
+.btn-green-full {
+  @apply h-fit text-center bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 mx-8;
 }
