@@ -131,7 +131,7 @@ defmodule DigistabStoreWeb.ProductLive.Index do
     if product.status.name == "Ativo" do
       ~s[]
     else
-      ~s[opacity-30]
+      ~s[opacity-50]
     end
   end
 end

@@ -201,12 +201,17 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   defp save_product(socket, :edit, product_params) do
     product = socket.assigns.product |> Repo.preload([:status, :category])
 
-    media =
-      if product_params["media"] in [product.media, ""],
-        do: consume_upload(socket, product_params["media"]),
-        else: product_params["media"]
+    product_params =
+      case handle_media(socket, product_params) do
+        {:ok, :no_media} ->
+          product_params
 
-    params = set_product_params(product_params, media)
+        {:ok, media} ->
+          product_params
+          |> Map.put("media", media)
+      end
+
+    params = set_product_params(product_params)
 
     tags = socket.assigns.selected_tags
 
@@ -225,43 +230,40 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   end
 
   defp save_product(socket, :new, product_params) do
-    media =
-      if !Map.has_key?(product_params, "media"),
-        do: consume_upload(socket, product_params["media"]),
-        else: product_params["media"]
+    case handle_media(socket, product_params) do
+      {:ok, :no_media} ->
+        {:noreply, socket}
 
-    params = set_product_params(product_params, media)
+      {:ok, media} ->
+        tags = socket.assigns.selected_tags
 
-    if media in ["", nil] do
-      {:noreply,
-       socket
-       |> put_flash(:error, "Por favor, insira um arquivo de imagem ou um link.")}
-    else
-      tags = socket.assigns.selected_tags
+        product_params
+        |> Map.put("media", media)
+        |> set_product_params()
+        |> then(
+          &case Store.create_product(%Product{}, &1) do
+            {:ok, product} ->
+              handle_tags(product, tags)
 
-      case Store.create_product(%Product{}, params) do
-        {:ok, product} ->
-          handle_tags(product, tags)
+              {:noreply,
+               socket
+               |> put_flash(:info, "Product created successfully")
+               |> push_redirect(to: socket.assigns.return_to)}
 
-          {:noreply,
-           socket
-           |> put_flash(:info, "Product created successfully")
-           |> push_redirect(to: socket.assigns.return_to)}
-
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, changeset: changeset)}
-      end
+            {:error, %Ecto.Changeset{} = changeset} ->
+              {:noreply, assign(socket, changeset: changeset)}
+          end
+        )
     end
   end
 
-  defp set_product_params(product_params, media) do
+  defp set_product_params(product_params) do
     status = DigistabStore.Store.get_status!(product_params["status_select"])
     category = DigistabStore.Store.get_category!(product_params["category_select"])
 
     product_params
     |> Map.put("status", status)
     |> Map.put("category", category)
-    |> Map.put("media", media)
   end
 
   defp ext(entry) do
@@ -269,23 +271,37 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     ext
   end
 
-  defp consume_upload(socket, media) do
-    case consume_uploaded_entries(socket, :media, fn %{path: path}, entry ->
-           dest =
-             Path.join([
-               :code.priv_dir(:digistab_store),
-               "static",
-               "uploads",
-               "#{entry.uuid}.#{ext(entry)}"
-             ])
+  defp consume_upload(socket) do
+    consume_uploaded_entries(socket, :media, fn %{path: path}, entry ->
+      dest =
+        Path.join([
+          :code.priv_dir(:digistab_store),
+          "static",
+          "uploads",
+          "#{entry.uuid}.#{ext(entry)}"
+        ])
 
-           File.cp!(path, dest)
+      File.cp!(path, dest)
 
-           {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
-         end) do
-      [] -> media
-      [new_media] -> new_media
+      {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
+    end)
+    |> then(fn [path] -> {:ok, path} end)
+  end
+
+  defp handle_media(socket, product_params) do
+    if(
+      !Map.has_key?(product_params, "media") and
+        Enum.count(socket.assigns.uploads.media.entries) == 0
+    ) do
+      {:ok, :no_media}
+    else
+      if Enum.count(socket.assigns.uploads.media.entries) > 0 do
+        consume_upload(socket)
+      else
+        {:ok, Map.get(product_params, "media")}
+      end
     end
+    |> IO.inspect()
   end
 
   defp handle_tags(product, tags) do
