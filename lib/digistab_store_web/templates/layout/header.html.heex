@@ -1,0 +1,27 @@
+<div class="h-0 md:h-fit flex flex-col border-b bg-white py-4 border-black shadow-xl">
+    <div class=" flex flex-row justify-between mt-2 w-full items-center">
+        
+        <div>
+            <%= live_redirect to: Routes.product_index_path(@conn, :index), class: "" do %>
+                <span class="">
+                    <image src={Routes.static_path(@conn, "/images/digistab_banner.png")} class="object-fill h-24 rounded-lg p-2 md:p-0" />
+                </span>
+            <% end %>
+        </div>
+        <div class="text-4xl square-peg-font">
+            A loja em que você pode vender tudo que quiser!
+        </div>
+        <div class="flex flex-col justify-center">
+            <div class="w-16 h-24 shadow-lg rounded border bg-white self-center">
+
+            </div>
+            <div class="text-center mr-4">
+                Sem autenticação
+            </div>
+        </div>
+
+    </div>
+    <div>
+        <%= render("navbar.html", conn: @conn) %>
+    </div>
+</div>

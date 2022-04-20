@@ -43,7 +43,7 @@ defmodule DigistabStoreWeb.ProductLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Products")
+    |> assign(:page_title, "Listando Produtos")
     |> assign(:product, nil)
   end
 

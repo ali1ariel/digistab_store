@@ -16,6 +16,11 @@
 
 @import "./components/status.css";
 
+.square-peg-font {
+  font-family: 'Square Peg', cursive;
+}
+
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;

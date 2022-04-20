@@ -17,6 +17,6 @@ defmodule DigistabStoreWeb.ProductLive.Show do
      |> assign(:product, Store.get_product!(id) |> Repo.preload([:status, :category, :tags]))}
   end
 
-  defp page_title(:show), do: "Show Product"
-  defp page_title(:edit), do: "Edit Product"
+  defp page_title(:show), do: "Exibindo Produto"
+  defp page_title(:edit), do: "Editando Produto"
 end

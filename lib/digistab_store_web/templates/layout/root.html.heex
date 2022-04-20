@@ -5,13 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "DigistabStore", suffix: " · Phoenix Framework" %>
+    <%= live_title_tag assigns[:page_title] || "DigistabStore", suffix: " · DigiStab Store" %>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <script src="https://kit.fontawesome.com/a73c23d57b.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Square+Peg&display=swap" rel="stylesheet">
   </head>
   <body class="bg-blue-100">
+    <%= render("header.html", conn: @conn) %>
     <%= @inner_content %>
   </body>
 </html>
