@@ -1,8 +1,7 @@
 <div class="md:w-fit p-4 rounded shadow-lg bg-gray-200">
-
-  <%= for tag <- @selected_tags do %>
-    <%= tag.name %>
-  <% end %>
+  <div class="w-full text-center text-2xl my-4">
+    <%= @title %>
+  </div>
 
   <.form
     let={f}

@@ -34,7 +34,7 @@ defmodule DigistabStore.StoreTest do
         quantity: 42
       }
 
-      assert {:ok, %Product{} = product} = Store.create_product(valid_attrs)
+      assert {:ok, %Product{} = product} = Store.create_product(%Product{}, valid_attrs)
       assert product.description == "some description"
       assert product.media == "some media"
       assert product.name == "some name"
@@ -43,7 +43,7 @@ defmodule DigistabStore.StoreTest do
     end
 
     test "create_product/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Store.create_product(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Store.create_product(%Product{}, @invalid_attrs)
     end
 
     test "update_product/2 with valid data updates the product" do

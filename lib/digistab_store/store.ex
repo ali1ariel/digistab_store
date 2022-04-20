@@ -437,11 +437,33 @@ defmodule DigistabStore.Store do
     Repo.delete(product_tag)
   end
 
+
+  @doc """
+  Creates an association product with tag.
+
+  ## Examples
+
+      iex> assoc_product_tag(pruduct, tag)
+      {:ok, %ProductTag{}}
+  """
   def assoc_product_tag(%Product{} = product, %Tag{} = tag) do
     %ProductTag{product_id: product.id, tag_id: tag.id}
     |> Repo.insert()
   end
 
+
+  @doc """
+  find the association between the product and the tag to pass to a function to delete.
+
+  ## Examples
+
+      iex> dissoc_product_tag(product, tag)
+      {:ok, %ProductTag{}}
+
+      iex> dissoc_product_tag(product, tag)
+      {:error, %Ecto.Changeset{}}
+
+  """
   def dissoc_product_tag(%Product{} = product, %Tag{} = tag) do
     Repo.get_by!(ProductTag, product_id: product.id, tag_id: tag.id)
     |> delete_product_tag()

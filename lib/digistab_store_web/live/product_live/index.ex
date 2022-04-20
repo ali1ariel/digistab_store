@@ -37,7 +37,7 @@ defmodule DigistabStoreWeb.ProductLive.Index do
     ]
 
     socket
-    |> assign(:page_title, "New Product")
+    |> assign(:page_title, "Novo Produto")
     |> assign(assigns)
   end
 

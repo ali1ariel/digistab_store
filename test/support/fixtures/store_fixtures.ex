@@ -4,6 +4,8 @@ defmodule DigistabStore.StoreFixtures do
   entities via the `DigistabStore.Store` context.
   """
 
+  alias DigistabStore.Store.Product
+
   @doc """
   Generate a product.
   """
@@ -11,15 +13,15 @@ defmodule DigistabStore.StoreFixtures do
     {:ok, product} =
       attrs
       |> Enum.into(%{
-        description: "some description",
-        media: "some media",
-        name: "some name",
-        status: status_fixture(),
-        category: category_fixture(),
-        price: 42,
-        quantity: 42
+        "description" => "some description",
+        "media" => "some media",
+        "name" => "some name",
+        "status" => status_fixture(),
+        "category" => category_fixture(),
+        "price" => 42,
+        "quantity" => 42
       })
-      |> DigistabStore.Store.create_product()
+      |> then(&DigistabStore.Store.create_product(%Product{}, &1))
 
     product
   end
@@ -32,8 +34,7 @@ defmodule DigistabStore.StoreFixtures do
       attrs
       |> Enum.into(%{
         description: "some description",
-        id: "7488a646-e31f-11e4-aace-600308960662",
-        name: "some name"
+        name: "Ativo"
       })
       |> DigistabStore.Store.create_status()
 
@@ -48,7 +49,6 @@ defmodule DigistabStore.StoreFixtures do
       attrs
       |> Enum.into(%{
         description: "some description",
-        id: "7488a646-e31f-11e4-aace-600308960662",
         name: "some name"
       })
       |> DigistabStore.Store.create_category()

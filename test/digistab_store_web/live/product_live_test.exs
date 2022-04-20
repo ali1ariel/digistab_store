@@ -5,18 +5,18 @@ defmodule DigistabStoreWeb.ProductLiveTest do
   import DigistabStore.StoreFixtures
 
   @create_attrs %{
-    description: "some description",
-    media: "some media",
-    name: "some name",
-    price: 42,
-    quantity: 42
+    "description" => "",
+    "media" => "some media",
+    "name" => "some name",
+    "price" => 42,
+    "quantity" => 42
   }
   @update_attrs %{
-    description: "some updated description",
-    media: "some updated media",
-    name: "some updated name",
-    price: 43,
-    quantity: 43
+    "description" => "some updated description",
+    "media" => "some updated media",
+    "name" => "some updated name",
+    "price" => 43,
+    "quantity" => 43
   }
   @invalid_attrs %{description: nil, media: nil, name: nil, price: nil, quantity: nil}
 
@@ -38,14 +38,10 @@ defmodule DigistabStoreWeb.ProductLiveTest do
     test "saves new product", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, Routes.product_index_path(conn, :index))
 
-      assert index_live |> element("a", "New Product") |> render_click() =~
-               "New Product"
+      assert index_live |> element("a", "Criar Produto") |> render_click() =~
+               "Novo Produto"
 
       assert_patch(index_live, Routes.product_index_path(conn, :new))
-
-      assert index_live
-             |> form("#product-form", product: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
 
       {:ok, _, html} =
         index_live
