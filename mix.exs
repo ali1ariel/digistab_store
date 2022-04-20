@@ -20,7 +20,7 @@ defmodule DigistabStore.MixProject do
   def application do
     [
       mod: {DigistabStore.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :inets]
     ]
   end
 
@@ -65,7 +65,6 @@ defmodule DigistabStore.MixProject do
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.deploy": [
-        "cmd --cd assets npm run deploy",
         "esbuild default --minify",
         "phx.digest"
       ]

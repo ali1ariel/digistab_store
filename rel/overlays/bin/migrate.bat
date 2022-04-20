@@ -1,0 +1,1 @@
+call "%~dp0\digistab_store" eval DigistabStore.Release.migrate
