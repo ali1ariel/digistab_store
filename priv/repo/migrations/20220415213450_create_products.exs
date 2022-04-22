@@ -8,7 +8,7 @@ defmodule DigistabStore.Repo.Migrations.CreateProducts do
       add :description, :text
       add :price, :integer
       add :quantity, :integer
-      add :media, :string
+      add :media, {:array, :string}, null: false, default: []
 
       timestamps()
     end

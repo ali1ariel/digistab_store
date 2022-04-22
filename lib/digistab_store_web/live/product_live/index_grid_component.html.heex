@@ -1,0 +1,48 @@
+
+    <div class="responsive-grid-products">
+      <%= for product <- @products |> Enum.sort_by(& &1.status.name) do %>
+<div class="h-full">
+       <% opacity = active?(product) %>
+        <div class="border rounded-lg shadow-inner box-border bg-white h-full">
+          <div class={opacity <>" h-full"}>
+          <%= live_redirect to: Routes.product_show_path(@socket, :show, product) do %>
+            <div class="flex lg:flex-col flex-row h-full content-around w-full p-2">
+              <div class="w-fit ml-auto mb-1">
+                <div class={product.status.name <> ""}>
+                  <%= product.status.name %>
+                </div>
+              </div>
+              <div class="h-full grid grid-rows-2">
+                <div class="md:w-full rounded-lg mx-4 md:mx-0">
+                  <image src={product.media |> List.first} class="object-scale-down self-center mx-auto" />
+                </div>
+                <div class="flex flex-col p-2 justify-between h-full w-full space-between">
+                  <div class="flex flex-row font-semibold w-full mx-auto text-center text-blue-400 text-2xl">
+                    <%= product.name  |> DigistabStore.HelperFunctions.cut_string(40) %>
+                  </div>
+                  <div>
+                    <div class="flex flex-row italic my-2 text-center mx-auto mobile-visible">
+                      <%= product.description |> DigistabStore.HelperFunctions.cut_string(100) |> raw()   %>
+                    </div>
+                    <div class="desktop-visible flex flex-row italic my-2 text-center mx-auto">
+                      <%= product.description |> DigistabStore.HelperFunctions.cut_string(200) |> raw() %>
+                    </div>
+                  </div>
+                  <div class="flex flex-row justify-center justify-between">
+                    <div class="flex flex-col italic font-semibold text-center">
+                      <div class="word-wrap">estoque</div>
+                      <div><%= product.quantity %></div>
+                    </div>  
+                    <div class="flex font-bold text-xl"><%= product.price |> DigistabStore.HelperFunctions.convert_value() %></div>
+                  </div>
+                </div>
+                  
+              </div>
+            </div>
+            <% end %>
+            
+          </div>
+        </div>
+      </div>
+      <% end %>
+    </div>

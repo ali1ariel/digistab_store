@@ -1,0 +1,84 @@
+<div class="w-full flex flex-col border rounded-lg p-4 bg-white h-fit">
+  <%= if Enum.count(@marked_products) > 0 do %>
+  <div class="border p-4 m-4 flex flex-row justify-between items-center" phx-click="delete-marked-products" phx-target={@myself}>
+    <div>
+      <%=Enum.count(@marked_products)%> produtos selecionados.
+    </div>
+    <div class="btn-coral" data-confirm="Tem certeza que deseja fazer esta exclusão?">
+      Deletar Produtos
+    </div>
+  </div>
+  <% end %>
+  <div class="grid grid-cols-7 gap-4 text-xl">
+    <div class="col-start-1 col-end-2 flex justify-center text-center items-center">
+      <div class="cursor-pointer" phx-click="mark-all-products" phx-target={@myself}>
+        <%= if Enum.count(@products) == Enum.count(@marked_products) do %>
+          <i class="fa-solid fa-check-circle text-green-500"></i>
+        <% else %>
+          <i class="fa-solid fa-circle text-gray-500"></i>
+        <% end %>                
+      </div>
+    </div>
+    <div class="col-start-2 col-end-3 flex justify-center text-center items-center"></div>
+    <div class="col-start-3 col-end-6 flex justify-center text-center items-center cursor-pointer" phx-click="sort-by" phx-value-type="name" phx-target={@myself}>
+      <div class="items-center align-middle">
+        <span>
+          Produto 
+        </span>
+        <span>
+          <%= sort_icon("name", @sort_by, @sort_type) %> 
+        </span>
+      </div>
+    </div>
+    <div class="col-start-6 col-end-7 flex justify-center text-center items-center cursor-pointer" phx-click="sort-by" phx-value-type="status" phx-target={@myself}>
+      <div class="items-center align-middle">
+      <span>
+        Status 
+      </span>
+      <span>
+        <%= sort_icon("status", @sort_by, @sort_type) %> 
+      </span>
+    </div>
+  </div>
+    <div class="col-start-7 col-end-8 flex justify-center text-center items-center cursor-pointer" phx-click="sort-by" phx-value-type="category" phx-target={@myself}>
+      <div class="items-center align-middle">
+      <span>
+        Categoria 
+      </span>
+      <span>
+        <%= sort_icon("category", @sort_by, @sort_type) %> 
+      </span>
+    </div>
+  </div>
+  </div>
+  <div class="flex flex-col space-y-2 mt-4">
+    <%= for product <- @products do %>            
+        <div class="grid grid-cols-7 gap-4 rounded-lg border">
+          <div class="col-start-1 col-end-2 flex justify-center text-center items-center">
+              <div class="cursor-pointer" phx-click="mark-product" phx-value-product-id={product.id} phx-target={@myself}>
+                <%= if product.id in @marked_products do %>
+                  <i class="fa-solid fa-check-circle text-green-500"></i>
+                <% else %>
+                  <i class="fa-solid fa-circle text-gray-500"></i>
+                <% end %>                
+              </div>
+          </div>
+          <%= live_redirect to: Routes.product_show_path(@socket, :show, product), class: "col-start-2 col-end-8 grid grid-cols-6 " do %>
+            <div class="col-start-1 col-end-2 flex justify-center text-center items-center"><image src={product.media |> List.first} class="object-scale-down" /></div>
+            <div class="col-start-2 col-end-5 flex justify-center text-center items-center"><p class=""><%= product.name%></p></div>
+            <div class="col-start-5 col-end-6 flex justify-center text-center items-center">
+              <div class="w-fit mb-1">
+                <div class={product.status.name <> ""}>
+                  <%= product.status.name %>
+                </div>
+              </div>
+            </div>
+            <div class="col-start-6 col-end-7 flex justify-center text-center items-center"><p class=""><%= product.category.name %></p></div>
+
+              
+          <% end %>
+        </div>
+    <% end %>
+  </div>
+
+</div>

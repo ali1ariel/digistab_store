@@ -1,0 +1,31 @@
+<div class="w-full rounded-lg mx-4 md:mx-0">
+      <image src={Enum.at(@media, @current_position)} class="h-192 object-fill w-full rounded-lg p-2 md:p-0" />
+      <div id="photo-management" class="flex flex-row justify-around">
+          <div class="text-2xl w-4">
+                <%= if @current_position > 0 do %>
+                    <i class="fa-solid fa-arrow-left cursor-pointer w-4" phx-click="previous-image" phx-target={@myself}></i>
+                <% end %>
+            </div>
+            <div class="flex flex-row space-x-2 items-center">
+                <div class={if @current_position > 0 do "text-black " else "text-gray-400 " end <> "text-md" }>
+                    <%#= if @current_position > 0 do %>
+                        <i class="fa-solid fa-circle"></i>               
+                    <%# end %>
+                </div>
+                <div class="text-2xl">
+                    <i class="fa-solid fa-circle"></i>               
+                </div>
+                <div class={if  @current_position < (Enum.count(@media) - 1)  do "text-black " else "text-gray-400 " end <> "text-md"}>
+                    <%#= if @current_position < (Enum.count(@media) - 1) do %>
+                        <i class="fa-solid fa-circle"></i>               
+                    <%# end %>
+                </div>
+                
+            </div>
+            <div class="text-2xl w-4">
+                <%= if @current_position < (Enum.count(@media) - 1) do %>
+                    <i class="fa-solid fa-arrow-right cursor-pointer w-4" phx-click="next-image" phx-target={@myself}></i>
+                <% end %>
+            </div>
+      </div>
+</div>

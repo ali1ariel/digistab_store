@@ -10,7 +10,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   def mount(socket) do
     {:ok,
      socket
-     |> allow_upload(:media, accept: ~w[.jpg .jpeg .png], max_entries: 1)}
+     |> allow_upload(:media, accept: ~w[.jpg .jpeg .png], max_entries: 5)}
   end
 
   @impl true
@@ -191,17 +191,10 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   # verify tags that matches with the search phrase, returning this list sorted.
   defp search(tags, tag_search_phrase) do
     tags
-    |> Enum.filter(&matches?(&1.name, tag_search_phrase))
+    |> Enum.filter(&DigistabStore.HelperFunctions.matches?(&1.name, tag_search_phrase))
     |> sorted()
   end
 
-  # verify the match, looking at each possible position in the tag name, return true if it matches.
-  defp matches?(first, second) do
-    String.contains?(
-      String.downcase(first),
-      String.downcase(second)
-    )
-  end
 
   # sort the tags by name.
   defp sorted(tags), do: Enum.sort_by(tags, &String.first(&1.name))
@@ -211,7 +204,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     product = socket.assigns.product |> Repo.preload([:status, :category])
     tags = socket.assigns.selected_tags
 
-    case handle_media(socket, product_params) do
+    case handle_media(socket) do
       {:ok, :no_media} ->
         product_params
 
@@ -236,7 +229,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
   #save the product, case you're creating.
   defp save_product(socket, :new, product_params) do
-    case handle_media(socket, product_params) do
+    case handle_media(socket) do
       {:ok, :no_media} ->
         {:noreply, socket}
 
@@ -287,7 +280,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
       {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
     end)
-    |> then(fn [path] -> {:ok, path} end)
+    |> then(fn files -> {:ok, files} end)
   end
 
   defp ext(entry) do
@@ -295,18 +288,12 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
     ext
   end
 
-  defp handle_media(socket, product_params) do
-    if(
-      !Map.has_key?(product_params, "media") and
-        Enum.count(socket.assigns.uploads.media.entries) == 0
+  defp handle_media(socket) do
+    if(Enum.count(socket.assigns.uploads.media.entries) == 0
     ) do
       {:ok, :no_media}
     else
-      if Enum.count(socket.assigns.uploads.media.entries) > 0 do
         consume_upload(socket)
-      else
-        {:ok, Map.get(product_params, "media")}
-      end
     end
   end
 
