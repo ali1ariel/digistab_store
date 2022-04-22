@@ -56,14 +56,14 @@
               <!-- div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field" phx-target={@myself}>Enviar URL de imagem</div-->
           </div>
             <%= for entry <- @uploads.media.entries do %>
-              <div class="flex flex-row justify-around">
-                <div class="flex flex-row h-24 align-center self-center">
+              <div class="grid grid-cols-3">
+                <div class="flex flex-row h-24 align-center justify-center rounded0lg">
                   <%= live_img_preview(entry) %>
                 </div>
-                <div class="flex flex-row align-center">
+                <div class="flex flex-row align-center justify-center">
                   <progress max="100" value={entry.progress} class="rounded self-center"/>
                 </div>
-                <div class="btn-indigo  align-center self-center" phx-click="cancel-entry"  phx-value-file={false} phx-value-ref={entry.ref} phx-target={@myself}>
+                <div class="btn-indigo w-full mx-auto justify-center align-center self-center" phx-click="cancel-entry"  phx-value-file={false} phx-value-ref={entry.ref} phx-target={@myself}>
                   X
                 </div>
               </div>

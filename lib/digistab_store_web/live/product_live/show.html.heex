@@ -64,7 +64,8 @@
   </div>
 </div>
 <div class="flex w-full justify-between px-12 pb-8 my-8">
-  <span><%= live_redirect "Back", to: Routes.product_index_path(@socket, :index), class: "button btn-coral" %></span>
+  <span><%= live_redirect "Back", to: Routes.product_index_path(@socket, :index), class: "button btn-indigo-light" %></span>
+  <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @product.id, data: [confirm: "Tem certeza que deseja fazer esta exclusão?"], class: "btn-coral"%></span>
   <span><%= live_patch "Edit", to: Routes.product_show_path(@socket, :edit, @product), class: "button btn-green" %></span>
 </div>
 </div>

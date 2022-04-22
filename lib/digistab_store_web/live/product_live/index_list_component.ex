@@ -11,7 +11,7 @@ defmodule DigistabStoreWeb.ProductLive.Index.IndexListComponent do
       id: id,
       sort_by: "name",
       sort_type: true,
-      marked_products: []
+      marked_products: [products |> List.first() |> Map.get(:id)]
     ]
 
     {:ok, socket |> assign(assigns)}
@@ -36,7 +36,6 @@ defmodule DigistabStoreWeb.ProductLive.Index.IndexListComponent do
   end
 
   def handle_event("mark-product", %{"product-id" => id}, socket) do
-    IO.inspect(id)
 
     marked_products = socket.assigns.marked_products
     marked_products = if id in marked_products do
@@ -44,8 +43,30 @@ defmodule DigistabStoreWeb.ProductLive.Index.IndexListComponent do
     else
       marked_products ++ [id]
     end
+    |> Enum.sort()
 
     {:noreply, socket |> assign(marked_products: marked_products)}
+  end
+
+  def handle_event("mark-all-products", _, socket) do
+    marked_products = socket.assigns.products |> Enum.map(& &1.id) |> Enum.sort()
+    marked_products = if socket.assigns.marked_products |> Enum.sort() == marked_products do
+      []
+    else
+      marked_products
+    end
+
+    {:noreply, socket |> assign(marked_products: marked_products)}
+  end
+
+  def handle_event("delete-marked-products", _, socket) do
+    assigns = [
+      marked_products: [],
+      products: Enum.reject(socket.assigns.products, fn product -> product.id in socket.assigns.marked_products end)
+    ]
+
+
+    {:noreply, socket |> assign(assigns)}
   end
 
   def sort(products, type, sort) do
