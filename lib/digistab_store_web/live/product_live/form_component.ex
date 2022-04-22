@@ -10,7 +10,7 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   def mount(socket) do
     {:ok,
      socket
-     |> allow_upload(:media, accept: ~w[.jpg .jpeg .png], max_entries: 5)}
+     |> allow_upload(:media, accept: ~w[.jpg .jpeg .png], max_entries: 5, external: &presign_entry/2 )}
   end
 
   @impl true
@@ -267,20 +267,11 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
   end
 
   defp consume_upload(socket) do
-    consume_uploaded_entries(socket, :media, fn %{path: path}, entry ->
-      dest =
-        Path.join([
-          :code.priv_dir(:digistab_store),
-          "static",
-          "uploads",
-          "#{entry.uuid}.#{ext(entry)}"
-        ])
-
-      File.cp!(path, dest)
-
-      {:ok, Routes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
-    end)
-    |> then(fn files -> {:ok, files} end)
+    {completed, []} = uploaded_entries(socket, :media)
+      for entry <- completed do
+        Path.join(s3_host(), s3_key(entry))
+      end
+      |> then(fn files -> {:ok, files} end)
   end
 
   defp ext(entry) do
@@ -305,5 +296,32 @@ defmodule DigistabStoreWeb.ProductLive.FormComponent do
 
     Enum.map(tags_to_add, &Store.assoc_product_tag(product, &1))
     Enum.map(tags_to_remove, &Store.dissoc_product_tag(product, &1))
+  end
+
+  @bucket "digistab-store"
+
+  defp s3_host(), do: "//#{@bucket}.s3.amazonaws.com"
+  defp s3_key(entry), do: "#{entry.uuid}.#{ext(entry)}"
+
+  defp presign_entry(entry, socket) do
+    uploads = socket.assigns.uploads
+    key = s3_key(entry)
+
+    config = %{
+      scheme: "http://",
+      host: "s3.amazonaws.com",
+      region: "us-east-1",
+      access_key_id: System.fetch_env!("AWS_ACCESS_KEY_ID"),
+      secret_access_key: System.fetch_env!("AWS_SECRET_ACCESS_KEY")
+    }
+
+    {:ok, fields} = DigistabStore.SimpleS3Upload.sign_form_upload(config, @bucket,
+    key: key,
+    content_type: entry.client_type,
+    max_file_size: uploads.media.max_file_size,
+    expires_in: :timer.hours(1))
+
+    meta = %{uploader: "S3", key: key, url: s3_host(), fields: fields}
+    {:ok, meta, socket}
   end
 end
