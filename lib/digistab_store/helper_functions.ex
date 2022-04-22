@@ -10,4 +10,12 @@ defmodule DigistabStore.HelperFunctions do
       string <> if out != "", do: "...", else: ""
     end)
   end
+
+  # verify the match, looking at each possible position in the tag name, return true if it matches.
+  def matches?(first, second) do
+    String.contains?(
+      String.downcase(first),
+      String.downcase(second)
+    )
+  end
 end

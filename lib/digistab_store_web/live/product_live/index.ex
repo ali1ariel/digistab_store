@@ -14,7 +14,10 @@ defmodule DigistabStoreWeb.ProductLive.Index do
       status_collection: Store.list_status(),
       status: nil,
       categories: Store.list_categories(),
-      category: nil
+      category: nil,
+      searching_phrase: "",
+      searched_products: [],
+      grid?: false
     ]
 
     {:ok, assign(socket, assigns)}
@@ -122,6 +125,48 @@ defmodule DigistabStoreWeb.ProductLive.Index do
 
     {:noreply, assign(socket, products: products, category: nil)}
   end
+
+  @impl true
+  def handle_event("layout-update", _, socket), do: {:noreply, socket |> assign(:grid?, !socket.assigns.grid?)}
+
+  @impl true
+  def handle_event("search-products", %{"searching-phrase" => ""}, socket) do
+      assigns = [
+        products:
+          list_products()
+          |> DigistabStore.Repo.preload([:status, :category, :tags]),
+        searching_phrase: ""
+      ]
+
+    {:noreply, assign(socket, assigns)}
+
+  end
+
+  @impl true
+  def handle_event("search-products", %{"searching-phrase" => phrase}, socket) do
+      assigns = [
+        products:
+          list_products()
+          |> DigistabStore.Repo.preload([:status, :category, :tags])
+          |> search(phrase),
+        searching_phrase: ""
+      ]
+
+    {:noreply, assign(socket, assigns)}
+
+  end
+
+
+
+  # default function to catch errors.
+  defp search(_, ""), do: []
+
+  # verify tags that matches with the search phrase, returning this list sorted.
+  defp search(products, search_phrase) do
+    products
+    |> Enum.filter(&DigistabStore.HelperFunctions.matches?(&1.name, search_phrase))
+  end
+
 
   defp list_products do
     Store.list_products()

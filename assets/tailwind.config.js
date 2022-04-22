@@ -23,6 +23,9 @@ module.exports = {
           '1/2': '50%',
           '3/4': '75%'
       },
+      height: {
+        '192': '48rem'
+      }
     }
   },
   variants: {},

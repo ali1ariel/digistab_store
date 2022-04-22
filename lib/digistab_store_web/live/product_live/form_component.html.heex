@@ -38,7 +38,7 @@
 
     
         <div class="form-field-text">
-        <%= if @display_media_field == false do %>
+        <%#= if @display_media_field == false do %>
         <label class="mx-auto w-fit italic mt-2"> Arquivo de Imagem</label>    
           <div>            
           <div class="flex flex-col h-fit border border-dashed border-2 px-4 py-2 my-4 rounded mx-24 h-32 justify-center y-space-4" phx-drop-target={@uploads.media.ref}>
@@ -53,7 +53,7 @@
                 Arraste uma imagem .jpeg ou .png aqui para adicionar uma imagem. 
               </div>
             </div>
-              <div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field" phx-target={@myself}>Enviar URL de imagem</div>
+              <!-- div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field" phx-target={@myself}>Enviar URL de imagem</div-->
           </div>
             <%= for entry <- @uploads.media.entries do %>
               <div class="flex flex-row justify-around">
@@ -70,15 +70,18 @@
             <% end %>
 
         </div>
-        <% else %>
-        <div class="flex flex-col space-y-4">
-          <label class="mx-auto w-fit italic mt-2"> URL da imagem</label>    
-          <%= text_input f, :media, class: "form-text-input", placeholder: "https://www.example.com/photo.jpg" %>
-          <%= error_tag f, :media %>  
-          <div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field"  phx-target={@myself}>Enviar arquivo de imagem</div>
-        </div>
+        <!--
 
-        <% end %>
+          <%# else %>
+          <div class="flex flex-col space-y-4">
+            <label class="mx-auto w-fit italic mt-2"> URL da imagem</label>    
+            <%= text_input f, :media, class: "form-text-input", placeholder: "https://www.example.com/photo.jpg" %>
+            <%= error_tag f, :media %>  
+            <div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field"  phx-target={@myself}>Enviar arquivo de imagem</div>
+          </div>
+          
+          <%# end %>
+        -->
         </div>
       </div>
       <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">

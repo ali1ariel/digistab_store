@@ -10,10 +10,6 @@ alias DigistabStore.Store.Product
     description:
       "O produto não será disponibilizado após salvar, podendo ser feito posteriormente."
   },
-  %{
-    name: "Desativado",
-    description: "O produto está atualmente indisponível."
-  }
 ]
 |> Enum.map(&DigistabStore.Store.create_status/1)
 
@@ -69,7 +65,7 @@ alias DigistabStore.Store.Product
     "description" => "Ovo de pascoa ben 10 80G delicce ovo ben 10 80G delicce",
     "price" => 1999,
     "quantity" => 5,
-    "media" => "https://images-americanas.b2w.io/produtos/32030780/imagens/ovo-de-pascoa-ben-10-80g-delicce/32030780_1_xlarge.jpg",
+    "media" => ["https://images-americanas.b2w.io/produtos/32030780/imagens/ovo-de-pascoa-ben-10-80g-delicce/32030780_1_xlarge.jpg"],
     "status" => DigistabStore.Store.list_status() |> List.first(),
     "category" => DigistabStore.Store.list_categories() |> List.first(),
   },
@@ -79,7 +75,7 @@ alias DigistabStore.Store.Product
     "description" => "A vida é muito melhor com chocolate! Delicioso chocolate ao leite Hersheys com Ovomaltine. Alimento com extrato de cereal (cevada e malte) sabor chocolate. Peso Líquido 87g.",
     "price" => 499,
     "quantity" => 9,
-    "media" => "https://images-americanas.b2w.io/produtos/50983211/imagens/tablete-de-chocolate-ao-leite-com-ovomaltine-87g-hersheys/50983209_1_xlarge.jpg",
+    "media" => ["https://images-americanas.b2w.io/produtos/50983211/imagens/tablete-de-chocolate-ao-leite-com-ovomaltine-87g-hersheys/50983209_1_xlarge.jpg"],
     "status" => DigistabStore.Store.list_status() |> List.last(),
     "category" => DigistabStore.Store.list_categories() |> List.last(),
   },
@@ -88,7 +84,7 @@ alias DigistabStore.Store.Product
     "description" => "A Caixa de Bombom Garoto - é um presente que encanta aos olhos, uma surpresa e uma troca de carinho. Para qualquer momento e qualquer lugar, possui uma diversidade de sabores que agradam a todos os gostos.",
     "price" => 999,
     "quantity" => 25,
-    "media" => "https://images-americanas.b2w.io/produtos/01/00/img/1417116/1/1417116105_1GG.jpg",
+    "media" => ["https://images-americanas.b2w.io/produtos/01/00/img/1417116/1/1417116105_1GG.jpg"],
     "status" => DigistabStore.Store.list_status() |> List.first(),
     "category" => DigistabStore.Store.list_categories() |> List.last(),
   },
@@ -97,7 +93,7 @@ alias DigistabStore.Store.Product
     "description" => "O novo Galaxy Tab S6 Lite é o seu companheiro de anotações super portátil. Com uma tela grande de 10,4 polegadas em um design fino e leve. One UI 2 no Android, S Pen ergônomica e capa protetora inclusas e prontas para uso. O Tablet perfeito para mudar o seu jeito de aprender, criar, ver o mundo e se divertir.",
     "price" => "129990",
     "quantity" => 3,
-    "media" => "https://images-americanas.b2w.io/produtos/01/00/img/1720331/8/1720331801_1GG.jpg",
+    "media" => ["https://images-americanas.b2w.io/produtos/01/00/img/1720331/8/1720331801_1GG.jpg"],
     "status" => DigistabStore.Store.list_status() |> List.last(),
     "category" => DigistabStore.Store.list_categories() |> List.first(),
   }

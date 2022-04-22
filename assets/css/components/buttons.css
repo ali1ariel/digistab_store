@@ -1,8 +1,15 @@
 .btn-indigo {
   @apply w-fit h-fit bg-indigo-700 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 focus:ring focus:ring-indigo-300;
 }
+
+.btn-indigo-full {
+  @apply h-fit text-center bg-indigo-700 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 focus:ring focus:ring-indigo-300 mx-8;
+}
 .btn-indigo-light {
   @apply w-fit h-fit bg-indigo-400 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0;
+}
+.btn-indigo-light-full {
+  @apply h-fit text-center bg-indigo-400 text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0 mx-8;
 }
 .btn-opal {
   @apply w-fit h-fit bg-opal text-white font-bold py-2 px-4 rounded cursor-pointer shadow-lg border-b-2 border-b-black focus:border-b-0;

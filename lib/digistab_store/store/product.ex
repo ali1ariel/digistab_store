@@ -8,10 +8,11 @@ defmodule DigistabStore.Store.Product do
 
   schema "products" do
     field :description, :string
-    field :media, :string
+    field :media, {:array, :string}, default: []
     field :name, :string
     field :price, :integer
-    field :quantity, :integer
+    field :promotional_price, :integer
+    field :quantity, :integer, default: 1
 
     belongs_to :status, Status, foreign_key: :status_id, on_replace: :nilify
     belongs_to :category, Category, foreign_key: :category_id, on_replace: :nilify
@@ -28,8 +29,8 @@ defmodule DigistabStore.Store.Product do
   @doc false
   def changeset(product, attrs) do
     product
-    |> cast(attrs, [:name, :description, :price, :quantity, :media])
-    |> validate_required([:name, :description, :price, :quantity])
+    |> cast(attrs, [:name, :description, :price, :promotional_price, :quantity, :media])
+    |> validate_required([:name, :description, :price])
     |> put_assoc(:status, Map.get(attrs, "status"))
     |> put_assoc(:category, Map.get(attrs, "category"))
   end

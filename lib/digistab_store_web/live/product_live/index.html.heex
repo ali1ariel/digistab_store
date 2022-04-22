@@ -12,77 +12,63 @@
   </.modal>
 <% end %>
 
-<div class="my-12 flex w-fit mx-auto">
+<div class="flex flex-row mt-8">
+  
+<div class="my-4 flex w-1/4 mx-auto justify-center">
   <span><%= live_patch "Criar Produto", to: Routes.product_index_path(@socket, :new), class: "btn-opal self-end" %></span>
-</div>  
-  <div class="my-12 w-full md:w-1/4 flex flex-col w-fit mx-auto border rounded shadow-lg bg-white py-4">
-    <div class="self-center">Status</div>
-    <div class="flex flex-row justify-around">
-      <div class={if @status == nil, do: "btn-indigo", else: "btn-indigo-light"}  phx-click="set-status" phx-value-status={nil}>Todos</div>
-      <%= for status <- @status_collection do %>
-        <div class={if @status == status, do: "btn-indigo", else: "btn-indigo-light"}  phx-click="set-status" phx-value-status={status.id}><%= status.name %></div>
-      <% end %>
+</div> 
+<div class="flex w-3/4 flex-row items-center justify-around">     
+  <div class="w-full flex flex-row justify-around mx-8 items-center">
+    <%= form_tag "#", [as: "SearchProduct", class: "w-3/4"] do %>
+    <div class="w-full flex flex-row space-x-4 items-center border px-4 py-2 rounded-lg w-2/3 mx-auto bg-white">
+      <input type="text" id="search_product" name="searching-phrase" phx-change="search-products" value={@searching_phrase} autocomplete="off" class="border px-4 py-2 rounded-lg w-full mx-auto" placeholder="mesa, TV, notebook..." />
+      <i class="fa-solid fa-magnifying-glass"></i>
     </div>
-  </div>
-  <div class="flex flex-col md:flex-row">
-      
-  <div class="my-12 w-full md:w-1/4 flex flex-col w-fit mx-auto border rounded shadow-lg bg-white py-4">
-    <div class="self-center">Categorias</div>
-    <div class="flex flex-col space-y-2">
-      <div class={if @category == nil, do: "btn-green-full", else: "btn-opal-full"} phx-click="set-category" phx-value-category={nil}>Todos</div>
-      <%= for category <- @categories do %>
-        <div class={if @category == category, do: "btn-green-full", else: "btn-opal-full"} phx-click="set-category" phx-value-category={category.id}><%= category.name %></div>
-      <% end %>
-    </div>
-  </div>
-<div class="md:mx-auto w-full lg:w-2/3 responsive-box ">
-  <div class="responsive-grid-products">
-    <%= for product <- @products |> Enum.sort_by(& &1.status.name) do %>
-      <% opacity = active?(product) %>
-      <div class="border rounded-lg shadow-inner box-border bg-white">
-        <div class={opacity}>
-        <%= live_redirect to: Routes.product_show_path(@socket, :show, product) do %>
-          <div class="flex lg:flex-col flex-row h-full w-full p-2">
-            <div class="w-fit ml-auto mb-1">
-              <div class={product.status.name <> ""}>
-                <%= product.status.name %>
-              </div>
-            </div>
-            <div class="h-1/2 md:w-full rounded-lg mx-4 md:mx-0">
-              <image src={product.media} class="object-fill w-full rounded-lg p-2 md:p-0" />
-            </div>
-            <div class="flex flex-col p-2 justify-between h-full w-full space-between">
-              <div class="flex flex-row font-semibold w-full mx-auto text-center text-blue-400 text-2xl">
-                <%= product.name  |> DigistabStore.HelperFunctions.cut_string(40) %>
-              </div>
-              <div>
-                <div class="flex flex-row italic my-2 text-center mx-auto mobile-visible">
-                  <%= product.description |> DigistabStore.HelperFunctions.cut_string(100) |> raw()   %>
-                </div>
-                <div class="desktop-visible flex flex-row italic my-2 text-center mx-auto">
-                  <%= product.description |> DigistabStore.HelperFunctions.cut_string(200) |> raw() %>
-                </div>
-              </div>
-              <div class="flex flex-row justify-center justify-between">
-                <div class="flex flex-col italic font-semibold text-center">
-                  <div class="word-wrap">estoque</div>
-                  <div><%= product.quantity %></div>
-                </div>  
-                <div class="flex font-bold text-xl"><%= product.price |> DigistabStore.HelperFunctions.convert_value() %></div>
-              </div>
-            </div>
-          </div>
-          <% end %>
-          
-        </div>
-      </div>
-    
-    <%#= live_patch "Edit", to: Routes.product_index_path(@socket, :edit, products) %>
-    <%#= link "Delete", to: "#", phx_click: "delete", phx_value_id: products.id, data: [confirm: "Are you sure?"] %>
-    
     <% end %>
+    <div>
+      <div class="btn-coral text-white" phx-click="layout-update">
+        <%= if @grid? do %>
+          <i class="fa-solid fa-list"></i>
+        <% else %>
+          <i class="fa-solid fa-grip"></i>
+        <% end %>
+      </div>
 
+    </div>
+  </div>  
+  
+</div>   
+
+</div>  
+<div class="flex flex-col md:flex-row mt-4 ">
+  <div class="flex flex-col w-1/4">
+    
+    <div class="my-4 w-full flex flex-col mx-auto border rounded shadow-lg bg-white py-4">
+      <div class="self-center">Status</div>
+      <div class="flex flex-col space-y-2">
+        <div class={if @status == nil, do: "btn-indigo-full", else: "btn-indigo-light-full"}  phx-click="set-status" phx-value-status={nil}>Todos</div>
+        <%= for status <- @status_collection do %>
+          <div class={if @status == status, do: "btn-indigo-full", else: "btn-indigo-light-full"}  phx-click="set-status" phx-value-status={status.id}><%= status.name %></div>
+        <% end %>
+      </div>
+    </div>     
+        
+    <div class="w-full flex flex-col w-full mx-auto border rounded shadow-lg bg-white py-4 mt-2">
+      <div class="self-center">Categorias</div>
+      <div class="flex flex-col space-y-2">
+        <div class={if @category == nil, do: "btn-green-full", else: "btn-opal-full"} phx-click="set-category" phx-value-category={nil}>Todos</div>
+        <%= for category <- @categories do %>
+          <div class={if @category == category, do: "btn-green-full", else: "btn-opal-full"} phx-click="set-category" phx-value-category={category.id}><%= category.name %></div>
+        <% end %>
+      </div>
+    </div>
   </div>
-</div>
+  <div class="md:mx-auto w-full lg:w-2/3 responsive-box ">
+    <%= if @grid? do %>
+        <.live_component module={DigistabStoreWeb.ProductLive.Index.IndexGridComponent} products={@products} id="ProductGrid" />
+    <% else %>
+      <.live_component module={DigistabStoreWeb.ProductLive.Index.IndexListComponent} products={@products} id="ProductList" />
+    <% end %>
+  </div>
 </div>
   
