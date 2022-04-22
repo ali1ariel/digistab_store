@@ -11,7 +11,7 @@ defmodule DigistabStoreWeb.ProductLive.Index.IndexListComponent do
       id: id,
       sort_by: "name",
       sort_type: true,
-      marked_products: [products |> List.first() |> Map.get(:id)]
+      marked_products: []
     ]
 
     {:ok, socket |> assign(assigns)}
