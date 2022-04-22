@@ -35,19 +35,17 @@
       </div>
 
       <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
-
-    
+        <%= for {_ref, msg} <- @uploads.media.errors do %>
+        <p class="alert alert-danger">
+          <%= Phoenix.Naming.humanize(msg) %>
+        </p>
+        <% end %>
         <div class="form-field-text">
         <%#= if @display_media_field == false do %>
         <label class="mx-auto w-fit italic mt-2"> Arquivo de Imagem</label>    
           <div>            
           <div class="flex flex-col h-fit border border-dashed border-2 px-4 py-2 my-4 rounded mx-24 h-32 justify-center y-space-4" phx-drop-target={@uploads.media.ref}>
             <div class="h-full w-fit mx-auto flex flex-col justify-center space-y-4">
-              <%= for {_ref, msg} <- @uploads.media.errors do %>
-              <p class="alert alert-tanger">
-                <%= Phoenix.Naming.humanize(msg) %>
-              </p>
-              <% end %>
               <%= live_file_input @uploads.media, class: "w-fit mx-auto border rounded px-4 py-2" %>
               <div class="italic text-center">
                 Arraste uma imagem .jpeg ou .png aqui para adicionar uma imagem. 
@@ -55,10 +53,13 @@
             </div>
               <!-- div id="media-file-to-link" class="text-blue-400 cursor-pointer underline mx-auto w-fit italic mt-2" phx-click="media-field" phx-target={@myself}>Enviar URL de imagem</div-->
           </div>
+          <div class="flex flex-col space-y-2">
             <%= for entry <- @uploads.media.entries do %>
               <div class="grid grid-cols-3">
-                <div class="flex flex-row h-24 align-center justify-center rounded0lg">
-                  <%= live_img_preview(entry) %>
+                <div class="flex flex-row h-24 align-center justify-center rounded-lg">
+                  <div class="w-24 h-24 flex content-fill items-center rounded-lg border">
+                    <%= live_img_preview entry %>
+                  </div>
                 </div>
                 <div class="flex flex-row align-center justify-center">
                   <progress max="100" value={entry.progress} class="rounded self-center"/>
@@ -68,6 +69,7 @@
                 </div>
               </div>
             <% end %>
+          </div>
 
         </div>
         <!--
@@ -86,13 +88,17 @@
       </div>
       <div class="bg-white px-4 py-2 border shadow-lg rounded-lg">
 
-        <div class="form-row">
+        <div class="form-row items-center">
           <div class="form-field-text">
             <label> Preço</label>     
             <%= number_input f, :price, class: "form-text-input" %>
             <%= error_tag f, :price %>
           </div>
-        
+          <div class="form-field-text">
+            <label> Preço Promocional</label>     
+            <%= number_input f, :promotional_price, class: "form-text-input" %>
+            <%= error_tag f, :promotional_price %>
+          </div>
           <div class="form-field-text">
             <label> Quantidade</label>     
             <%= number_input f, :quantity, class: "form-text-input" %>
