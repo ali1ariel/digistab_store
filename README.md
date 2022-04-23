@@ -20,7 +20,8 @@ a mesma aplicação se encontra online em: <b>[https://www.alissonmachado.social
 Para iniciar a aplicação é necessário:
 
   * Instalar as dependências com `mix deps.get`
-  * criar e migrar o banco de dados com `mix ecto.setup`
+  * Criar e migrar o banco de dados com `mix ecto.setup`
+  * Instalar possíveis dependências dos assets com `cd assets && npm install && cd .. && mix phx.digest`. 
   * Para iniciar de fato a aplicação pode-se utilizar o comando `mix phx.server` ou `iex -S mix phx.server`, este último rodando um terminal Iex em conjunto.
 
 
