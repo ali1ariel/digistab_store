@@ -10,8 +10,7 @@ alias DigistabStore.Store.Product
     description:
       "O produto não será disponibilizado após salvar, podendo ser feito posteriormente."
   },
-]
-|> Enum.map(&DigistabStore.Store.create_status/1)
+] |> Enum.map(&DigistabStore.Store.create_status/1)
 
 
 [
@@ -31,8 +30,7 @@ alias DigistabStore.Store.Product
     name: "Decoração",
     description: "Enfeites para deixar a sua casa mais linda que nunca."
   }
-]
-|> Enum.map(&DigistabStore.Store.create_category/1)
+] |> Enum.map(&DigistabStore.Store.create_category/1)
 
 
 [{:ok, tag1}, {:ok, tag2}, {:ok, tag3}, {:ok, tag4}, {:ok, tag5}] = [
@@ -56,8 +54,7 @@ alias DigistabStore.Store.Product
     name: "presentes",
     description: "Coleção de produtos perfeitos para presentear."
   }
-]
-|> Enum.map(&DigistabStore.Store.create_tag/1)
+] |> Enum.map(&DigistabStore.Store.create_tag/1)
 
 [{:ok, product1}, {:ok, product2}, {:ok, product3}, {:ok, product4}] = [
   %{
@@ -97,8 +94,7 @@ alias DigistabStore.Store.Product
     "status" => DigistabStore.Store.list_status() |> List.last(),
     "category" => DigistabStore.Store.list_categories() |> List.first(),
   }
-]
-|> Enum.map(&DigistabStore.Store.create_product(%Product{}, &1))
+] |> Enum.map(&DigistabStore.Store.create_product(%Product{}, &1))
 
 DigistabStore.Store.assoc_product_tag(product1, tag1)
 DigistabStore.Store.assoc_product_tag(product2, tag2)
