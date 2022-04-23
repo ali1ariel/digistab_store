@@ -12,7 +12,7 @@ config :digistab_store,
 
 # Configures the endpoint
 config :digistab_store, DigistabStoreWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "https://www.alissonmachado.social"],
   render_errors: [view: DigistabStoreWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: DigistabStore.PubSub,
   live_view: [signing_salt: "P3WA5FOR"]

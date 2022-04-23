@@ -50,13 +50,6 @@ defmodule DigistabStoreWeb.ProductLive.Index do
     |> assign(:product, nil)
   end
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    product = Store.get_product!(id) |> Repo.preload(:status)
-    {:ok, _} = Store.delete_product(product)
-
-    {:noreply, assign(socket, :products, list_products())}
-  end
 
   @impl true
   def handle_event("set-status", %{"status" => id}, socket) do

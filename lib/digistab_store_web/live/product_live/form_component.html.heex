@@ -141,9 +141,10 @@
       </div>
     </div>
 
-    <div>
+    <div class="mt-12 flex justify-center space-x-4">
+      <span><%= live_redirect "Descartar", to: Routes.product_index_path(@socket, :index), class: "button btn-coral flex mx-auto" %></span>
       <%= if @changeset.valid? do %>
-        <%= submit "Salvar Produto", phx_disable_with: "Saving...", class: "btn-indigo mt-12 flex mx-auto", phx_target: @myself %>
+        <%= submit "Salvar Produto", phx_disable_with: "Saving...", class: "btn-indigo flex mx-auto", phx_target: @myself %>
       <% end %>
     </div>
   </div>
